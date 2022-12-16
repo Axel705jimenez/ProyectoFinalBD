@@ -1,4 +1,4 @@
-CREATE DATABASE Minecraft																																																								||																			
+CREATE DATABASE Minecraft;
 USE Minecraft;
 
 CREATE TABLE Aldea
@@ -117,8 +117,8 @@ CREATE TABLE ConfigMundo
 	modoJuego varchar(50) not null,
 	dificultad varchar(50) not null,
 	preferencia varchar(50) not null,
-	semilla varchar(50) not null,
-	tipo int not null,
+	semilla int not null,
+	tipo varchar(50) not null,
 	estatus bit default 1,
     primary key (idConfigMundo)
 );
@@ -248,7 +248,7 @@ CREATE TABLE Evento
 CREATE TABLE Fluido
 (
 	idFluido int not null,
-	tipo int not null,
+	tipo varchar(50) not null,
 	nombre varchar(50)not null,
 	nivelFluido int not null,
 	estatus bit default 1,
@@ -258,9 +258,9 @@ CREATE TABLE Fluido
 CREATE TABLE Fortaleza
 (
 	idFortaleza int not null,
-	botin datetime not null,
+	botin varchar(50) not null,
 	nombre varchar(50) not null,
-	estilo int not null,
+	estilo varchar(50) not null,
 	estatus bit default 1,
     primary key (idFortaleza)
 );
@@ -268,7 +268,7 @@ CREATE TABLE Fortaleza
 CREATE TABLE Generacion
 (
 	idGeneracion int not null,
-	tipo datetime not null,
+	tipo varchar(50)not null,
 	lugarGeneracion varchar(50) not null,
 	estatus bit default 1,
     primary key (idGeneracion)
@@ -767,7 +767,14 @@ CREATE TABLE MundoTemplo
 	estatus bit default 1 not null,
 	primary key(idMundoTemplo)
 );
-
+CREATE TABLE ServidorModoServidor
+(
+idServidorModoServidor INT NOT NULL AUTO_INCREMENT,
+idServidor INT NOT NULL,
+idModoServidor INT NOT NULL,
+estatus BIT DEFAULT 1 NOT NULL,
+PRIMARY KEY (idServidorModoServidor)
+);
 
 #Foraneas Pendientes
 #Crafteo
@@ -856,7 +863,9 @@ ALTER TABLE MundoPackTextura ADD CONSTRAINT FK_MundoPackTexturaPackTextura FOREI
 #MundoTemplo
 ALTER TABLE MundoTemplo ADD CONSTRAINT FK_MundoTemploMundo FOREIGN KEY (idMundo) REFERENCES Mundo(idMundo);
 ALTER TABLE MundoTemplo ADD CONSTRAINT FK_MundoTemploTemplo FOREIGN KEY (idTemplo) REFERENCES Templo(idTemplo);
-
+#ServidorModoServidor
+ALTER TABLE ServidorModoServidor ADD CONSTRAINT FK_ServidorModoServidorServidor FOREIGN KEY (idServidor) REFERENCES Servidor(idServidor);
+ALTER TABLE ServidorModoServidor ADD CONSTRAINT FK_ServidorModoServidorModoServidor FOREIGN KEY (idModoServidor) REFERENCES ModoServidor(idModoServidor);
 
 #Index
 CREATE INDEX IX_Aldea ON Aldea(idAldea);
@@ -1022,1673 +1031,227 @@ INSERT INTO Comercio(idComercio,tipoComercio, tipoIntercambio) values (9,'Vended
 INSERT INTO Comercio(idComercio,tipoComercio, tipoIntercambio) values (10,'Pescador', 'Esmeralda');
 
 #Comida
-INSERT INTO Comida(idComida,tipo, valorNutrimento, nombre, ingredientes) values (1,'carne', 3, 'Filete', 'Vaca');
-INSERT INTO Comida(idComida,tipo, valorNutrimento, nombre, ingredientes) values (2,'Vegetal', 0.5, 'Zanahoria','zanahoria');
-INSERT INTO Comida(idComida,tipo, valorNutrimento, nombre, ingredientes) values (3,'Postre', 6, 'Pastel', 'Huevos,Leche,trigo,Azucar');
-INSERT INTO Comida(idComida,tipo, valorNutrimento, nombre, ingredientes) values (4,'carne', 3, 'chuleta', 'Cerdo');
-INSERT INTO Comida(idComida,tipo, valorNutrimento, nombre, ingredientes) values (5,'Fruta', 0.5, 'Manzana', 'Manzana');
-INSERT INTO Comida(idComida,tipo, valorNutrimento, nombre, ingredientes) values (6,'Postre', 3, 'Pastel de calabaza', 'Azucar,huevo,calabaza');
-INSERT INTO Comida(idComida,tipo, valorNutrimento, nombre, ingredientes) values (7,'Pollo', 3, 'Pollo asado', 'Pollo');
-INSERT INTO Comida(idComida,tipo, valorNutrimento, nombre, ingredientes) values (8,'Carne', 3, 'Carne de conejo', 'Conejo');
-INSERT INTO Comida(idComida,tipo, valorNutrimento, nombre, ingredientes) values (9,'Sopa', 2, 'Sopa de chamiñon', 'Champiñon, plato');
-INSERT INTO Comida(idComida,tipo, valorNutrimento, nombre, ingredientes) values (10,'carne', 3, 'chuleta', 'Vaca');
+INSERT INTO Comida(idComida,tipo, valorNutrimental, nombre, ingredientes) values (1,'carne', 3, 'Filete', 'Vaca');
+INSERT INTO Comida(idComida,tipo, valorNutrimental, nombre, ingredientes) values (2,'Vegetal', 0.5, 'Zanahoria','zanahoria');
+INSERT INTO Comida(idComida,tipo, valorNutrimental, nombre, ingredientes) values (3,'Postre', 6, 'Pastel', 'Huevos,Leche,trigo,Azucar');
+INSERT INTO Comida(idComida,tipo, valorNutrimental, nombre, ingredientes) values (4,'carne', 3, 'chuleta', 'Cerdo');
+INSERT INTO Comida(idComida,tipo, valorNutrimental, nombre, ingredientes) values (5,'Fruta', 0.5, 'Manzana', 'Manzana');
+INSERT INTO Comida(idComida,tipo, valorNutrimental, nombre, ingredientes) values (6,'Postre', 3, 'Pastel de calabaza', 'Azucar,huevo,calabaza');
+INSERT INTO Comida(idComida,tipo, valorNutrimental, nombre, ingredientes) values (7,'Pollo', 3, 'Pollo asado', 'Pollo');
+INSERT INTO Comida(idComida,tipo, valorNutrimental, nombre, ingredientes) values (8,'Carne', 3, 'Carne de conejo', 'Conejo');
+INSERT INTO Comida(idComida,tipo, valorNutrimental, nombre, ingredientes) values (9,'Sopa', 2, 'Sopa de chamiñon', 'Champiñon, plato');
+INSERT INTO Comida(idComida,tipo, valorNutrimental, nombre, ingredientes) values (10,'carne', 3, 'chuleta', 'Vaca');
 #ConfigMundo
-INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferenciasMundo, semilla, tipoMundo) values (1,'creativo', 'nulo','Mapa inicial', 333, 'Super plano');
-INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferenciasMundo, semilla, tipoMundo) values (2,'Supervivencia', 'Normal','Cofre de bonificación', 6151, 'Clasico');
-INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferenciasMundo, semilla, tipoMundo) values (3,'Superviviencia', 'Dificil','Cofre de bonificacion', 15265, 'Sky Block');
-INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferenciasMundo, semilla, tipoMundo) values (4,'creativo', 'nulo', 'Mapan inicial',65131, 'Clasico');
-INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferenciasMundo, semilla, tipoMundo) values (5,'Aventura', 'Normal','Mapa inicial', 416545, 'Clasico');
-INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferenciasMundo, semilla, tipoMundo) values (6,'creativo', 'nulo','nulo',4424, 'Clasico');
-INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferenciasMundo, semilla, tipoMundo) values (7,'Aventura', 'Normal','nulo',65545, 'Sky Block');
-INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferenciasMundo, semilla, tipoMundo) values (8,'Extremo', 'Dificil','nulo', 4354, 'Clasico');
-INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferenciasMundo, semilla, tipoMundo) values (9,'Extremo', 'Normal', 'nulo',15289, 'Clasico');
-
-INSERT INTO ConfigUsuario(idConfigUsuario,gamertag,idioma) values (1,'AxRadiel', 'Español');
-
-
-INSERT INTO Cultivo(idCultivo,CultivoDisponible, CultivoDebe, fecha) values ('CultivoDisponible2','CultivoDebe2', '1/12/2022');
-INSERT INTO Cultivo(idCultivo,CultivoDisponible, CultivoDebe, fecha) values ('CultivoDisponible3','CultivoDebe3', '1/12/2022');
-INSERT INTO Cultivo(idCultivo,CultivoDisponible, CultivoDebe, fecha) values ('CultivoDisponible4','CultivoDebe4', '1/12/2022');
-INSERT INTO Cultivo(idCultivo,CultivoDisponible, CultivoDebe, fecha) values ('CultivoDisponible5','CultivoDebe5', '1/12/2022');
-INSERT INTO Cultivo(idCultivo,CultivoDisponible, CultivoDebe, fecha) values ('CultivoDisponible6','CultivoDebe6', '1/12/2022');
-INSERT INTO Cultivo(CultivoDisponible, CultivoDebe, fecha) values ('CultivoDisponible7','CultivoDebe7', '1/12/2022');
-INSERT INTO Cultivo(CultivoDisponible, CultivoDebe, fecha) values ('CultivoDisponible8','CultivoDebe8', '1/12/2022');
-INSERT INTO Cultivo(CultivoDisponible, CultivoDebe, fecha) values ('CultivoDisponible9','CultivoDebe9', '1/12/2022');
-INSERT INTO Cultivo(CultivoDisponible, CultivoDebe, fecha) values ('CultivoDisponible10','CultivoDebe10', '1/12/2022');
-
-
---Deartamento
-INSERT INTO Ecosistema(nombre, numero, cantidad) values ('nombre1', 1, 'cantidad1')
-
-INSERT INTO Ecosistema(nombre, numero, cantidad) values ('nombre2', 2, 'cantidad2')
-
-INSERT INTO Ecosistema(nombre, numero, cantidad) values ('nombre3', 3, 'cantidad3')
-
-INSERT INTO Ecosistema(nombre, numero, cantidad) values ('nombre4', 4, 'cantidad4')
-
-INSERT INTO Ecosistema(nombre, numero, cantidad) values ('nombre5', 5, 'cantidad5')
-
-INSERT INTO Ecosistema(nombre, numero, cantidad) values ('nombre6', 6, 'cantidad6')
-
-INSERT INTO Ecosistema(nombre, numero, cantidad) values ('nombre7', 7, 'cantidad7')
-
-INSERT INTO Ecosistema(nombre, numero, cantidad) values ('nombre8', 8, 'cantidad8')
-
-INSERT INTO Ecosistema(nombre, numero, cantidad) values ('nombre9', 9, 'cantidad9')
-
-INSERT INTO Ecosistema(nombre, numero, cantidad) values ('nombre10', 10, 'cantidad10')
-
-
---Efecto
-INSERT INTO Efecto(Parche, cantidad, cantidadmonetaria, fecha) values ('Parche1', 1, 'cantidadmonetaria1', '1/12/2022')
-
-INSERT INTO Efecto(Parche, cantidad, cantidadmonetaria, fecha) values ('Parche2', 2, 'cantidadmonetaria2', '1/12/2022')
-
-INSERT INTO Efecto(Parche, cantidad, cantidadmonetaria, fecha) values ('Parche3', 3, 'cantidadmonetaria3', '1/12/2022')
-
-INSERT INTO Efecto(Parche, cantidad, cantidadmonetaria, fecha) values ('Parche4', 4, 'cantidadmonetaria4', '1/12/2022')
-
-INSERT INTO Efecto(Parche, cantidad, cantidadmonetaria, fecha) values ('Parche5', 5, 'cantidadmonetaria5', '1/12/2022')
-
-INSERT INTO Efecto(Parche, cantidad, cantidadmonetaria, fecha) values ('Parche6', 6, 'cantidadmonetaria6', '1/12/2022')
-
-INSERT INTO Efecto(Parche, cantidad, cantidadmonetaria, fecha) values ('Parche7', 7, 'cantidadmonetaria7', '1/12/2022')
-
-INSERT INTO Efecto(Parche, cantidad, cantidadmonetaria, fecha) values ('Parche8', 8, 'cantidadmonetaria8', '1/12/2022')
-
-INSERT INTO Efecto(Parche, cantidad, cantidadmonetaria, fecha) values ('Parche9', 9, 'cantidadmonetaria9', '1/12/2022')
-
-INSERT INTO Efecto(Parche, cantidad, cantidadmonetaria, fecha) values ('Parche10', 10, 'cantidadmonetaria10', '1/12/2022')
-
-
-
---Encantamiento
-INSERT INTO Encantamiento (nombre, apellidop, apellidom) values('Encantamiento1', 'Apellido1', 'Apellido1')
-
-INSERT INTO Encantamiento (nombre, apellidop, apellidom) values('Encantamiento2', 'Apellido2', 'Apellido2')
-
-INSERT INTO Encantamiento (nombre, apellidop, apellidom) values('Encantamiento3', 'Apellido3', 'Apellido3')
-
-INSERT INTO Encantamiento (nombre, apellidop, apellidom) values('Encantamiento4', 'Apellido4', 'Apellido4')
-
-INSERT INTO Encantamiento (nombre, apellidop, apellidom) values('Encantamiento5', 'Apellido5', 'Apellido5')
-
-INSERT INTO Encantamiento (nombre, apellidop, apellidom) values('Encantamiento6', 'Apellido6', 'Apellido6')
-
-INSERT INTO Encantamiento (nombre, apellidop, apellidom) values('Encantamiento7', 'Apellido7', 'Apellido7')
-
-INSERT INTO Encantamiento (nombre, apellidop, apellidom) values('Encantamiento8', 'Apellido8', 'Apellido8')
-
-INSERT INTO Encantamiento (nombre, apellidop, apellidom) values('Encantamiento9', 'Apellido8', 'Apellido9')
-
-INSERT INTO Encantamiento (nombre, apellidop, apellidom) values('Encantamiento10', 'Apellido10', 'Apellido10')
-
-
---Estadistica
-INSERT INTO Estadistica(Plugin, sueldo, nombre, apellidop, apellidom, calle, numero, ciudad, telefono) values('Plugin1', 'sueldo1', 'nombre1', 'apellidop1', 'apellidom1', 'calle1', 1, 'ciudad1', 1)
-
-INSERT INTO Estadistica(Plugin, sueldo, nombre, apellidop, apellidom, calle, numero, ciudad, telefono) values('Plugin2', 'sueldo2', 'nombre2', 'apellidop2', 'apellidom2', 'calle2', 2, 'ciudad2', 2)
-
-INSERT INTO Estadistica(Plugin, sueldo, nombre, apellidop, apellidom, calle, numero, ciudad, telefono) values('Plugin3', 'sueldo3', 'nombre3', 'apellidop3', 'apellidom3', 'calle3', 3, 'ciudad3', 3)
-
-INSERT INTO Estadistica(Plugin, sueldo, nombre, apellidop, apellidom, calle, numero, ciudad, telefono) values('Plugin4', 'sueldo4', 'nombre4', 'apellidop4', 'apellidom4', 'calle4',4 , 'ciudad4', 4)
-
-INSERT INTO Estadistica(Plugin, sueldo, nombre, apellidop, apellidom, calle, numero, ciudad, telefono) values('Plugin5', 'sueldo5', 'nombre5', 'apellidop5', 'apellidom5', 'calle5', 5, 'ciudad5', 5)
-
-INSERT INTO Estadistica(Plugin, sueldo, nombre, apellidop, apellidom, calle, numero, ciudad, telefono) values('Plugin6', 'sueldo6', 'nombre6', 'apellidop6', 'apellidom6', 'calle6', 6, 'ciudad6', 6)
-
-INSERT INTO Estadistica(Plugin, sueldo, nombre, apellidop, apellidom, calle, numero, ciudad, telefono) values('Plugin7', 'sueldo7', 'nombre7', 'apellidop7', 'apellidom7', 'calle7', 7, 'ciudad7', 7)
-
-INSERT INTO Estadistica(Plugin, sueldo, nombre, apellidop, apellidom, calle, numero, ciudad, telefono) values('Plugin8', 'sueldo8', 'nombre8', 'apellidop8', 'apellidom8', 'calle8', 8, 'ciudad8', 8)
-
-INSERT INTO Estadistica(Plugin, sueldo, nombre, apellidop, apellidom, calle, numero, ciudad, telefono) values('Plugin9', 'sueldo9', 'nombre9', 'apellidop9', 'apellidom9', 'calle9', 9, 'ciudad9', 9)
-
-INSERT INTO Estadistica(Plugin, sueldo, nombre, apellidop, apellidom, calle, numero, ciudad, telefono) values('Plugin10', 'sueldo10', 'nombre10', 'apellidop10', 'apellidom10', 'calle10', 10, 'ciudad10', 10)
-
-
---Estructura
-INSERT INTO Estructura(nombre, telefono, calle, estado, numero, colonia, ciudad) values('nombre1', 1, 'calle1', 'estado1', 1, 'colonia1', 'ciudad1')
-
-INSERT INTO Estructura(nombre, telefono, calle, estado, numero, colonia, ciudad) values('nombre2', 2, 'calle2', 'estado2', 2, 'colonia2', 'ciudad2')
-
-INSERT INTO Estructura(nombre, telefono, calle, estado, numero, colonia, ciudad) values('nombre3', 3, 'calle3', 'estado3', 3, 'colonia3', 'ciudad3')
-
-INSERT INTO Estructura(nombre, telefono, calle, estado, numero, colonia, ciudad) values('nombre4', 4, 'calle4', 'estado4', 4, 'colonia4', 'ciudad4')
-
-INSERT INTO Estructura(nombre, telefono, calle, estado, numero, colonia, ciudad) values('nombre5', 5, 'calle5', 'estado5', 5, 'colonia5', 'ciudad5')
-
-INSERT INTO Estructura(nombre, telefono, calle, estado, numero, colonia, ciudad) values('nombre6', 6, 'calle6', 'estado6', 6, 'colonia6', 'ciudad6')
-
-INSERT INTO Estructura(nombre, telefono, calle, estado, numero, colonia, ciudad) values('nombre7', 7, 'calle7', 'estado7', 7, 'colonia7', 'ciudad7')
-
-INSERT INTO Estructura(nombre, telefono, calle, estado, numero, colonia, ciudad) values('nombre8', 8, 'calle8', 'estado8', 8, 'colonia8', 'ciudad8')
-
-INSERT INTO Estructura(nombre, telefono, calle, estado, numero, colonia, ciudad) values('nombre9', 9, 'calle9', 'estado9', 9, 'colonia9', 'ciudad9')
-
-INSERT INTO Estructura(nombre, telefono, calle, estado, numero, colonia, ciudad) values('nombre10', 10, 'calle10', 'estado10', 10, 'colonia10', 'ciudad10')
-
-
---Evento
-INSERT INTO Evento(fechaSalida, fechaLlegada, Parches, cantidad) values('1/12/2022', '1/12/2022', 'Parche1', 1)
-
-INSERT INTO Evento(fechaSalida, fechaLlegada, Parches, cantidad) values('1/12/2022', '1/12/2022', 'Parche2', 2)
-
-INSERT INTO Evento(fechaSalida, fechaLlegada, Parches, cantidad) values('1/12/2022', '1/12/2022', 'Parche3', 3)
-
-INSERT INTO Evento(fechaSalida, fechaLlegada, Parches, cantidad) values('1/12/2022', '1/12/2022', 'Parche4', 4)
-
-INSERT INTO Evento(fechaSalida, fechaLlegada, Parches, cantidad) values('1/12/2022', '1/12/2022', 'Parche5', 5)
-
-INSERT INTO Evento(fechaSalida, fechaLlegada, Parches, cantidad) values('1/12/2022', '1/12/2022', 'Parche6', 6)
-
-INSERT INTO Evento(fechaSalida, fechaLlegada, Parches, cantidad) values('1/12/2022', '1/12/2022', 'Parche7', 7)
-
-INSERT INTO Evento(fechaSalida, fechaLlegada, Parches, cantidad) values('1/12/2022', '1/12/2022', 'Parche8', 8)
-
-INSERT INTO Evento(fechaSalida, fechaLlegada, Parches, cantidad) values('1/12/2022', '1/12/2022', 'Parche9', 9)
-
-INSERT INTO Evento(fechaSalida, fechaLlegada, Parches, cantidad) values('1/12/2022', '1/12/2022', 'Parche10', 10)
-
-
---Jefe
-INSERT INTO Jefe(nombre, modelo) values('nombre1','modelo1')
-
-INSERT INTO Jefe(nombre, modelo) values('nombre2','modelo2')
-
-INSERT INTO Jefe(nombre, modelo) values('nombre3','modelo3')
-
-INSERT INTO Jefe(nombre, modelo) values('nombre4','modelo4')
-
-INSERT INTO Jefe(nombre, modelo) values('nombre5','modelo5')
-
-INSERT INTO Jefe(nombre, modelo) values('nombre6','modelo6')
-
-INSERT INTO Jefe(nombre, modelo) values('nombre7','modelo7')
-
-INSERT INTO Jefe(nombre, modelo) values('nombre8','modelo8')
-
-INSERT INTO Jefe(nombre, modelo) values('nombre9','modelo9')
-
-INSERT INTO Jefe(nombre, modelo) values('nombre10','modelo10')
-
-
---Logro
-INSERT INTO Logro(material, nombre, cantidad) values('material1','nomre1', 1)
-
-INSERT INTO Logro(material, nombre, cantidad) values('material2','nomre2', 2)
-
-INSERT INTO Logro(material, nombre, cantidad) values('material3','nomre3', 3)
-
-INSERT INTO Logro(material, nombre, cantidad) values('material4','nomre4', 4)
-
-INSERT INTO Logro(material, nombre, cantidad) values('material5','nomre5', 5)
-
-INSERT INTO Logro(material, nombre, cantidad) values('material6','nomre6', 6)
-
-INSERT INTO Logro(material, nombre, cantidad) values('material7','nomre7', 7)
-
-INSERT INTO Logro(material, nombre, cantidad) values('material8','nomre8', 8)
-
-INSERT INTO Logro(material, nombre, cantidad) values('material9','nomre9', 9)
-
-INSERT INTO Logro(material, nombre, cantidad) values('material10','nomre10', 10)
-
-
---Menu
-INSERT INTO Menu(tipo) values('tipo1')
-
-INSERT INTO Menu(tipo) values('tipo2')
-
-INSERT INTO Menu(tipo) values('tipo3')
-
-INSERT INTO Menu(tipo) values('tipo4')
-
-INSERT INTO Menu(tipo) values('tipo5')
-
-INSERT INTO Menu(tipo) values('tipo6')
-
-INSERT INTO Menu(tipo) values('tipo7')
-
-INSERT INTO Menu(tipo) values('tipo8')
-
-INSERT INTO Menu(tipo) values('tipo9')
-
-INSERT INTO Menu(tipo) values('tipo10')
-
-
---Mob
-INSERT INTO Mob(numero, fecha, persona) values(1, '1/12/2022', 'persona1')
-
-INSERT INTO Mob(numero, fecha, persona) values(2, '1/12/2022', 'persona2')
-
-INSERT INTO Mob(numero, fecha, persona) values(3, '1/12/2022', 'persona3')
-
-INSERT INTO Mob(numero, fecha, persona) values(4, '1/12/2022', 'persona4')
-
-INSERT INTO Mob(numero, fecha, persona) values(5, '1/12/2022', 'persona5')
-
-INSERT INTO Mob(numero, fecha, persona) values(6, '1/12/2022', 'persona6')
-
-INSERT INTO Mob(numero, fecha, persona) values(7, '1/12/2022', 'persona7')
-
-INSERT INTO Mob(numero, fecha, persona) values(8, '1/12/2022', 'persona8')
-
-INSERT INTO Mob(numero, fecha, persona) values(9, '1/12/2022', 'persona9')
-
-INSERT INTO Mob(numero, fecha, persona) values(10, '1/12/2022', 'persona10')
-
-
-
---Modd
-INSERT INTO Modd(Parche, precio, precioAnterior, fecha) values('Parche1', 'precio1', 'precioAnterior1', '1/12/2022')
-
-INSERT INTO Modd(Parche, precio, precioAnterior, fecha) values('Parche1', 'precio1', 'precioAnterior1', '1/12/2022')
-
-INSERT INTO Modd(Parche, precio, precioAnterior, fecha) values('Parche1', 'precio1', 'precioAnterior1', '1/12/2022')
-
-INSERT INTO Modd(Parche, precio, precioAnterior, fecha) values('Parche1', 'precio1', 'precioAnterior1', '1/12/2022')
-
-INSERT INTO Modd(Parche, precio, precioAnterior, fecha) values('Parche1', 'precio1', 'precioAnterior1', '1/12/2022')
-
-INSERT INTO Modd(Parche, precio, precioAnterior, fecha) values('Parche1', 'precio1', 'precioAnterior1', '1/12/2022')
-
-INSERT INTO Modd(Parche, precio, precioAnterior, fecha) values('Parche1', 'precio1', 'precioAnterior1', '1/12/2022')
-
-INSERT INTO Modd(Parche, precio, precioAnterior, fecha) values('Parche1', 'precio1', 'precioAnterior1', '1/12/2022')
-
-INSERT INTO Modd(Parche, precio, precioAnterior, fecha) values('Parche1', 'precio1', 'precioAnterior1', '1/12/2022')
-
-INSERT INTO Modd(Parche, precio, precioAnterior, fecha) values('Parche1', 'precio1', 'precioAnterior1', '1/12/2022')
-
-
---ModoJuego
-INSERT INTO ModoJuego(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento) values('nombre1', 'apellidop1', 'apellidom1', '1/12/2022')
-
-INSERT INTO ModoJuego(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento) values('nombre2', 'apellidop2', 'apellidom2', '1/12/2022')
-
-INSERT INTO ModoJuego(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento) values('nombre3', 'apellidop3', 'apellidom3', '1/12/2022')
-
-INSERT INTO ModoJuego(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento) values('nombre4', 'apellidop4', 'apellidom4', '1/12/2022')
-
-INSERT INTO ModoJuego(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento) values('nombre5', 'apellidop5', 'apellidom5', '1/12/2022')
-
-INSERT INTO ModoJuego(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento) values('nombre6', 'apellidop6', 'apellidom6', '1/12/2022')
-
-INSERT INTO ModoJuego(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento) values('nombre7', 'apellidop7', 'apellidom7', '1/12/2022')
-
-INSERT INTO ModoJuego(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento) values('nombre8', 'apellidop8', 'apellidom8', '1/12/2022')
-
-INSERT INTO ModoJuego(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento) values('nombre9', 'apellidop9', 'apellidom9', '1/12/2022')
-
-INSERT INTO ModoJuego(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento) values('nombre10', 'apellidop10', 'apellidom10', '1/12/2022')
-
-
---Sonido
-INSERT INTO Sonido(Parches, cantidad, costo) values('Parche1', 1, 'costo1')
-
-INSERT INTO Sonido(Parches, cantidad, costo) values('Parche2', 2, 'costo2')
-
-INSERT INTO Sonido(Parches, cantidad, costo) values('Parche3', 3, 'costo3')
-
-INSERT INTO Sonido(Parches, cantidad, costo) values('Parche4', 4, 'costo4')
-
-INSERT INTO Sonido(Parches, cantidad, costo) values('Parche5', 5, 'costo5')
-
-INSERT INTO Sonido(Parches, cantidad, costo) values('Parche6', 6, 'costo6')
-
-INSERT INTO Sonido(Parches, cantidad, costo) values('Parche7', 7, 'costo7')
-
-INSERT INTO Sonido(Parches, cantidad, costo) values('Parche8', 8, 'costo8')
-
-INSERT INTO Sonido(Parches, cantidad, costo) values('Parche9', 9, 'costo9')
-
-INSERT INTO Sonido(Parches, cantidad, costo) values('Parche10', 10, 'costo10')
-
-
---PackRecurso
-INSERT INTO PackRecurso(clasificacion, descripcion) values('clasificacion1', 'descripcion1')
-
-INSERT INTO PackRecurso(clasificacion, descripcion) values('clasificacion2', 'descripcion2')
-
-INSERT INTO PackRecurso(clasificacion, descripcion) values('clasificacion3', 'descripcion3')
-
-INSERT INTO PackRecurso(clasificacion, descripcion) values('clasificacion4', 'descripcion4')
-
-INSERT INTO PackRecurso(clasificacion, descripcion) values('clasificacion5', 'descripcion5')
-
-INSERT INTO PackRecurso(clasificacion, descripcion) values('clasificacion6', 'descripcion6')
-
-INSERT INTO PackRecurso(clasificacion, descripcion) values('clasificacion7', 'descripcion7')
-
-INSERT INTO PackRecurso(clasificacion, descripcion) values('clasificacion8', 'descripcion8')
-
-INSERT INTO PackRecurso(clasificacion, descripcion) values('clasificacion9', 'descripcion9')
-
-INSERT INTO PackRecurso(clasificacion, descripcion) values('clasificacion10', 'descripcion10')
-
-
-
---PackTextura
-INSERT INTO PackTextura(cantidadFinal, ingresos) values(1, 'ingreso1')
-
-INSERT INTO PackTextura(cantidadFinal, ingresos) values(2, 'ingreso2')
-
-INSERT INTO PackTextura(cantidadFinal, ingresos) values(3, 'ingreso3')
-
-INSERT INTO PackTextura(cantidadFinal, ingresos) values(4, 'ingreso4')
-
-INSERT INTO PackTextura(cantidadFinal, ingresos) values(5, 'ingreso5')
-
-INSERT INTO PackTextura(cantidadFinal, ingresos) values(6, 'ingreso6')
-
-INSERT INTO PackTextura(cantidadFinal, ingresos) values(7, 'ingreso7')
-
-INSERT INTO PackTextura(cantidadFinal, ingresos) values(8, 'ingreso8')
-
-INSERT INTO PackTextura(cantidadFinal, ingresos) values(9, 'ingreso9')
-
-INSERT INTO PackTextura(cantidadFinal, ingresos) values(10, 'ingreso10')
-
-
---Templo
-INSERT INTO Templo(nombre, telefoo, calle, estado, colonia, ciudad) values('nombre1', 1, 'calle1', 'estado1', 'colonia1', 'ciudad1')
-
-INSERT INTO Templo(nombre, telefoo, calle, estado, colonia, ciudad) values('nombre2', 2, 'calle2', 'estado2', 'colonia2', 'ciudad2')
-
-INSERT INTO Templo(nombre, telefoo, calle, estado, colonia, ciudad) values('nombre3', 3, 'calle3', 'estado3', 'colonia3', 'ciudad3')
-
-INSERT INTO Templo(nombre, telefoo, calle, estado, colonia, ciudad) values('nombre4', 4, 'calle4', 'estado4', 'colonia4', 'ciudad4')
-
-INSERT INTO Templo(nombre, telefoo, calle, estado, colonia, ciudad) values('nombre5', 5, 'calle5', 'estado5', 'colonia5', 'ciudad5')
-
-INSERT INTO Templo(nombre, telefoo, calle, estado, colonia, ciudad) values('nombre6', 6, 'calle6', 'estado6', 'colonia6', 'ciudad6')
-
-INSERT INTO Templo(nombre, telefoo, calle, estado, colonia, ciudad) values('nombre7', 7, 'calle7', 'estado7', 'colonia7', 'ciudad7')
-
-INSERT INTO Templo(nombre, telefoo, calle, estado, colonia, ciudad) values('nombre8', 8, 'calle8', 'estado8', 'colonia8', 'ciudad8')
-
-INSERT INTO Templo(nombre, telefoo, calle, estado, colonia, ciudad) values('nombre9', 9, 'calle9', 'estado9', 'colonia9', 'ciudad9')
-
-INSERT INTO Templo(nombre, telefoo, calle, estado, colonia, ciudad) values('nombre10', 10, 'calle10', 'estado10', 'colonia10', 'ciudad10')
-
-
---Tesoro
-INSERT INTO Tesoro(fecha, cantidad) values('1/12/2022', 'cantidad1')
-
-INSERT INTO Tesoro(fecha, cantidad) values('1/12/2022', 'cantidad2')
-
-INSERT INTO Tesoro(fecha, cantidad) values('1/12/2022', 'cantidad3')
-
-INSERT INTO Tesoro(fecha, cantidad) values('1/12/2022', 'cantidad4')
-
-INSERT INTO Tesoro(fecha, cantidad) values('1/12/2022', 'cantidad5')
-
-INSERT INTO Tesoro(fecha, cantidad) values('1/12/2022', 'cantidad6')
-
-INSERT INTO Tesoro(fecha, cantidad) values('1/12/2022', 'cantidad7')
-
-INSERT INTO Tesoro(fecha, cantidad) values('1/12/2022', 'cantidad8')
-
-INSERT INTO Tesoro(fecha, cantidad) values('1/12/2022', 'cantidad9')
-
-INSERT INTO Tesoro(fecha, cantidad) values('1/12/2022', 'cantidad10')
-
-
---Pesca
-INSERT INTO Pesca(nombre, apellidoPaterno, apellidMaterno, calle, numero, ciudad, telefono) values('nombre1', 'apellidop1', 'apellidom1', 'calle1', 1, 'ciudad1', 1)
-
-INSERT INTO Pesca(nombre, apellidoPaterno, apellidMaterno, calle, numero, ciudad, telefono) values('nombre2', 'apellidop2', 'apellidom2', 'calle2', 2, 'ciudad2', 2)
-
-INSERT INTO Pesca(nombre, apellidoPaterno, apellidMaterno, calle, numero, ciudad, telefono) values('nombre3', 'apellidop3', 'apellidom3', 'calle3', 3, 'ciudad3', 3)
-
-INSERT INTO Pesca(nombre, apellidoPaterno, apellidMaterno, calle, numero, ciudad, telefono) values('nombre4', 'apellidop4', 'apellidom4', 'calle4', 4, 'ciudad4', 4)
-
-INSERT INTO Pesca(nombre, apellidoPaterno, apellidMaterno, calle, numero, ciudad, telefono) values('nombre5', 'apellidop5', 'apellidom5', 'calle5', 5, 'ciudad5', 5)
-
-INSERT INTO Pesca(nombre, apellidoPaterno, apellidMaterno, calle, numero, ciudad, telefono) values('nombre6', 'apellidop6', 'apellidom6', 'calle6', 6, 'ciudad6', 6)
-
-INSERT INTO Pesca(nombre, apellidoPaterno, apellidMaterno, calle, numero, ciudad, telefono) values('nombre7', 'apellidop7', 'apellidom7', 'calle7', 7, 'ciudad7', 7)
-
-INSERT INTO Pesca(nombre, apellidoPaterno, apellidMaterno, calle, numero, ciudad, telefono) values('nombre8', 'apellidop8', 'apellidom8', 'calle8', 8, 'ciudad8', 8)
-
-INSERT INTO Pesca(nombre, apellidoPaterno, apellidMaterno, calle, numero, ciudad, telefono) values('nombre9', 'apellidop9', 'apellidom9', 'calle9', 9, 'ciudad9', 9)
-
-INSERT INTO Pesca(nombre, apellidoPaterno, apellidMaterno, calle, numero, ciudad, telefono) values('nombre10', 'apellidop10', 'apellidom10', 'calle10', 10, 'ciudad10', 10)
-
-
---Stack
-INSERT INTO Stack(Jefe, matricula, modelo, cilindros) values('Jefe1', 'matricula1', 'modelo1', 'cilindro1')
-
-INSERT INTO Stack(Jefe, matricula, modelo, cilindros) values('Jefe2', 'matricula2', 'modelo2', 'cilindro2')
-
-INSERT INTO Stack(Jefe, matricula, modelo, cilindros) values('Jefe3', 'matricula3', 'modelo3', 'cilindro3')
-
-INSERT INTO Stack(Jefe, matricula, modelo, cilindros) values('Jefe4', 'matricula4', 'modelo4', 'cilindro4')
-
-INSERT INTO Stack(Jefe, matricula, modelo, cilindros) values('Jefe5', 'matricula5', 'modelo5', 'cilindro5')
-
-INSERT INTO Stack(Jefe, matricula, modelo, cilindros) values('Jefe6', 'matricula6', 'modelo6', 'cilindro6')
-
-INSERT INTO Stack(Jefe, matricula, modelo, cilindros) values('Jefe7', 'matricula7', 'modelo7', 'cilindro7')
-
-INSERT INTO Stack(Jefe, matricula, modelo, cilindros) values('Jefe8', 'matricula8', 'modelo8', 'cilindro8')
-
-INSERT INTO Stack(Jefe, matricula, modelo, cilindros) values('Jefe9', 'matricula9', 'modelo9', 'cilindro9')
-
-INSERT INTO Stack(Jefe, matricula, modelo, cilindros) values('Jefe10', 'matricula10', 'modelo10', 'cilindro9')
-
-
-
---Aldea
-INSERT INTO Aldea(nombre, fecha, idEncantamiento, estatus) values ('Aldea1', '1/12/2022', '1', '1')
-
-INSERT INTO Aldea(nombre, fecha, idEncantamiento, estatus) values ('Aldea2', '1/12/2022', '2', '1')
-
-INSERT INTO Aldea(nombre, fecha, idEncantamiento, estatus) values ('Aldea3', '1/12/2022', '3', '1')
-
-INSERT INTO Aldea(nombre, fecha, idEncantamiento, estatus) values ('Aldea4', '1/12/2022', '4', '1')
-
-INSERT INTO Aldea(nombre, fecha, idEncantamiento, estatus) values ('Aldea5', '1/12/2022', '5', '1')
-
-INSERT INTO Aldea(nombre, fecha, idEncantamiento, estatus) values ('Aldea6', '1/12/2022', '6', '1')
-
-INSERT INTO Aldea(nombre, fecha, idEncantamiento, estatus) values ('Aldea7', '1/12/2022', '7', '1')
-
-INSERT INTO Aldea(nombre, fecha, idEncantamiento, estatus) values ('Aldea8', '1/12/2022', '8', '1')
-
-INSERT INTO Aldea(nombre, fecha, idEncantamiento, estatus) values ('Aldea9', '1/12/2022', '9', '1')
-
-INSERT INTO Aldea(nombre, fecha, idEncantamiento, estatus) values ('Aldea10', '1/12/2022', '10', '1')
-
-SELECT *FROM Aldea
-
-
---Animal
-INSERT INTO Animal(nombre, calle, numero, ciudad, idTemplo, estatus) values ('Animal1', 'calle1',1, 'ciudad1', '1', '1')
-
-INSERT INTO Animal(nombre, calle, numero, ciudad, idTemplo, estatus) values ('Animal2', 'calle2',2,  'ciudad2', '2', '1')
-
-INSERT INTO Animal(nombre, calle, numero, ciudad, idTemplo, estatus) values ('Animal3', 'calle3',3, 'ciudad3', '3', '1')
-
-INSERT INTO Animal(nombre, calle, numero, ciudad, idTemplo, estatus) values ('Animal4', 'calle4',4, 'ciudad4', '4', '1')
-
-INSERT INTO Animal(nombre, calle, numero, ciudad, idTemplo, estatus) values ('Animal5', 'calle5',5, 'ciudad5', '5', '1')
-
-INSERT INTO Animal(nombre, calle, numero, ciudad, idTemplo, estatus) values ('Animal6', 'calle6',6, 'ciudad6', '6', '1')
-
-INSERT INTO Animal(nombre, calle, numero, ciudad, idTemplo, estatus) values ('Animal7', 'calle7',7, 'ciudad7', '7', '1')
-
-INSERT INTO Animal(nombre, calle, numero, ciudad, idTemplo, estatus) values ('Animal8', 'calle8',8, 'ciudad8', '8', '1')
-
-INSERT INTO Animal(nombre, calle, numero, ciudad, idTemplo, estatus) values ('Animal9', 'calle9',9, 'ciudad9', '9', '1')
-
-INSERT INTO Animal(nombre, calle, numero, ciudad, idTemplo, estatus) values ('Animal10', 'calle10',10, 'ciudad10', '10', '1')
-
-
-SELECT *FROM Animal
-
---Arma
-INSERT INTO Arma(numer, persona, computadora, idTemplo, estatus) values (1, 'persona1', 'computadora1', '1', '1')
-
-INSERT INTO Arma(numer, persona, computadora, idTemplo, estatus) values (2, 'persona2', 'computadora2', '2', '1')
-
-INSERT INTO Arma(numer, persona, computadora, idTemplo, estatus) values (3, 'persona3', 'computadora3', '3', '1')
-
-INSERT INTO Arma(numer, persona, computadora, idTemplo, estatus) values (4, 'persona4', 'computadora4', '4', '1')
-
-INSERT INTO Arma(numer, persona, computadora, idTemplo, estatus) values (5, 'persona5', 'computadora5', '5', '1')
-
-INSERT INTO Arma(numer, persona, computadora, idTemplo, estatus) values (6, 'persona6', 'computadora6', '6', '1')
-
-INSERT INTO Arma(numer, persona, computadora, idTemplo, estatus) values (7, 'persona7', 'computadora7', '7', '1')
-
-INSERT INTO Arma(numer, persona, computadora, idTemplo, estatus) values (8, 'persona8', 'computadora8', '8', '1')
-
-INSERT INTO Arma(numer, persona, computadora, idTemplo, estatus) values (9, 'persona9', 'computadora9', '9', '1')
-
-INSERT INTO Arma(numer, persona, computadora, idTemplo, estatus) values (10, 'persona10', 'computadora110', '10', '1')
-
-
---Bloque
-INSERT INTO Bloque(fecha, asunto, nombre, edad, idAldea, estatus) values ('1/12/2022', 'asunto1', 'nombre1', 1, '1', '1')
-
-INSERT INTO Bloque(fecha, asunto, nombre, edad, idAldea, estatus) values ('1/12/2022', 'asunto2', 'nombre2', 2, '2', '1')
-
-INSERT INTO Bloque(fecha, asunto, nombre, edad, idAldea, estatus) values ('1/12/2022', 'asunto3', 'nombre3', 3, '3', '1')
-
-INSERT INTO Bloque(fecha, asunto, nombre, edad, idAldea, estatus) values ('1/12/2022', 'asunto4', 'nombre4', 4, '4', '1')
-
-INSERT INTO Bloque(fecha, asunto, nombre, edad, idAldea, estatus) values ('1/12/2022', 'asunto5', 'nombre5', 5, '5', '1')
-
-INSERT INTO Bloque(fecha, asunto, nombre, edad, idAldea, estatus) values ('1/12/2022', 'asunto6', 'nombre6', 6, '6', '1')
-
-INSERT INTO Bloque(fecha, asunto, nombre, edad, idAldea, estatus) values ('1/12/2022', 'asunto7', 'nombre7', 7, '7', '1')
-
-INSERT INTO Bloque(fecha, asunto, nombre, edad, idAldea, estatus) values ('1/12/2022', 'asunto8', 'nombre8', 8, '8', '1')
-
-INSERT INTO Bloque(fecha, asunto, nombre, edad, idAldea, estatus) values ('1/12/2022', 'asunto9', 'nombre9', 9, '9', '1')
-
-INSERT INTO Bloque(fecha, asunto, nombre, edad, idAldea, estatus) values ('1/12/2022', 'asunto10', 'nombre10', 10, '10', '1')
-
-
---Chat
-INSERT INTO Chat(nombre, apellidoPaterno, apellidoMaterno, curp, calle,  telefono, numero, estado, idCultivo, estatus) values ('nombre1', 'apellidoPaterno1', 'apellidoMaterno', 'curp1','calle1', 1, 1, 'Estado1', '1', '1')
-
-INSERT INTO Chat(nombre, apellidoPaterno, apellidoMaterno, curp, calle, telefono, numero, estado, idCultivo, estatus) values ('nombre1', 'apellidoPaterno1', 'apellidoMaterno', 'curp1', 'Calle2', 2, 2, 'Estado2', '1', '1')
-
-INSERT INTO Chat(nombre, apellidoPaterno, apellidoMaterno, curp, calle,  telefono, numero, estado, idCultivo, estatus) values ('nombre1', 'apellidoPaterno1', 'apellidoMaterno', 'curp1', 'Calle3',3, 3, 'Estado3','1', '1')
-
-INSERT INTO Chat(nombre, apellidoPaterno, apellidoMaterno, curp, calle,  telefono, numero, estado, idCultivo, estatus) values ('nombre1', 'apellidoPaterno1', 'apellidoMaterno', 'curp1', 'Calle4', 4, 4, 'Estado4', '1', '1')
-
-INSERT INTO Chat(nombre, apellidoPaterno, apellidoMaterno, curp, calle,  telefono, numero, estado, idCultivo, estatus) values ('nombre1', 'apellidoPaterno1', 'apellidoMaterno', 'curp1', 'Calle5', 5, 5, 'Estado5', '1', '1')
-
-INSERT INTO Chat(nombre, apellidoPaterno, apellidoMaterno, curp, calle,  telefono, numero, estado, idCultivo, estatus) values ('nombre1', 'apellidoPaterno1', 'apellidoMaterno', 'curp1', 'Calle6', 6,6, 'Estado6',  '1', '1')
-
-INSERT INTO Chat(nombre, apellidoPaterno, apellidoMaterno, curp, calle,  telefono, numero, estado, idCultivo, estatus) values ('nombre1', 'apellidoPaterno1', 'apellidoMaterno', 'curp1','Calle7', 7, 7, 'Estado7', '1', '1')
-
-INSERT INTO Chat(nombre, apellidoPaterno, apellidoMaterno, curp, calle, telefono, numero, estado, idCultivo, estatus) values ('nombre1', 'apellidoPaterno1', 'apellidoMaterno', 'curp1', 'Calle8', 8,8, 'Estado8', '1', '1')
-
-INSERT INTO Chat(nombre, apellidoPaterno, apellidoMaterno, curp, calle,  telefono, numero, estado, idCultivo, estatus) values ('nombre1', 'apellidoPaterno1', 'apellidoMaterno', 'curp1', 'Calle9',  9, 9, 'Estado9', '1', '1')
-
-INSERT INTO Chat(nombre, apellidoPaterno, apellidoMaterno, curp, calle,  telefono, numero, estado, idCultivo, estatus) values ('nombre1', 'apellidoPaterno1', 'apellidoMaterno', 'curp1', 'Calle10', 10, 10, 'Estado10', '1', '1')
-
-
---Crafteo
-INSERT INTO Crafteo(cantidad, fecha, idChat , estatus) values (1, '1/12/2022', '1', '1')
-
-INSERT INTO Crafteo(cantidad, fecha, idChat , estatus) values (2, '1/12/2022', '2', '1')
-
-INSERT INTO Crafteo(cantidad, fecha, idChat , estatus) values (3, '1/12/2022', '3', '1')
-
-INSERT INTO Crafteo(cantidad, fecha, idChat , estatus) values (4, '1/12/2022', '4', '1')
-
-INSERT INTO Crafteo(cantidad, fecha, idChat , estatus) values (5, '1/12/2022', '5', '1')
-
-INSERT INTO Crafteo(cantidad, fecha, idChat , estatus) values (6, '1/12/2022', '6', '1')
-
-INSERT INTO Crafteo(cantidad, fecha, idChat , estatus) values (7, '1/12/2022', '7', '1')
-
-INSERT INTO Crafteo(cantidad, fecha, idChat , estatus) values (8, '1/12/2022', '8', '1')
-
-INSERT INTO Crafteo(cantidad, fecha, idChat , estatus) values (9, '1/12/2022', '9', '1')
-
-INSERT INTO Crafteo(cantidad, fecha, idChat , estatus) values (10, '1/12/2022', '10', '1')
-
-
-
---Chunk
-INSERT INTO Chunk(cantidad, fecha, idComida, idCrafteo, estatus) values (1, '1/12/2022', '1', '1', '1')
-
-INSERT INTO Chunk(cantidad, fecha, idComida, idCrafteo, estatus) values (2, '1/12/2022', '2', '2', '1')
-
-INSERT INTO Chunk(cantidad, fecha, idComida, idCrafteo, estatus) values (3, '1/12/2022', '3', '3', '1')
-
-INSERT INTO Chunk(cantidad, fecha, idComida, idCrafteo, estatus) values (4, '1/12/2022', '4', '4', '1')
-
-INSERT INTO Chunk(cantidad, fecha, idComida, idCrafteo, estatus) values (5, '1/12/2022', '5', '5', '1')
-
-INSERT INTO Chunk(cantidad, fecha, idComida, idCrafteo, estatus) values (6, '1/12/2022', '6', '6', '1')
-
-INSERT INTO Chunk(cantidad, fecha, idComida, idCrafteo, estatus) values (7, '1/12/2022', '7', '7', '1')
-
-INSERT INTO Chunk(cantidad, fecha, idComida, idCrafteo, estatus) values (8, '1/12/2022', '8', '8', '1')
-
-INSERT INTO Chunk(cantidad, fecha, idComida, idCrafteo, estatus) values (9, '1/12/2022', '9', '9', '1')
-
-INSERT INTO Chunk(cantidad, fecha, idComida, idCrafteo, estatus) values (10, '1/12/2022', '10', '10', '1')
-
-
-
-
---Comercio
-INSERT INTO Comercio(fecha, precio, nombre, idModoJuego, idEncantamiento, estatus) values ('1/12/2022', 1, 'nombre1', '1', '1', '1')
-
-INSERT INTO Comercio(fecha, precio, nombre, idModoJuego, idEncantamiento, estatus) values ('1/12/2022', 2, 'nombre2', '2', '2', '1')
-
-INSERT INTO Comercio(fecha, precio, nombre, idModoJuego, idEncantamiento, estatus) values ('1/12/2022', 3, 'nombre3', '3', '3', '1')
-
-INSERT INTO Comercio(fecha, precio, nombre, idModoJuego, idEncantamiento, estatus) values ('1/12/2022', 4, 'nombre4', '4', '4', '1')
-
-INSERT INTO Comercio(fecha, precio, nombre, idModoJuego, idEncantamiento, estatus) values ('1/12/2022', 5, 'nombre5', '5', '5', '1')
-
-INSERT INTO Comercio(fecha, precio, nombre, idModoJuego, idEncantamiento, estatus) values ('1/12/2022', 6, 'nombre6', '6', '6', '1')
-
-INSERT INTO Comercio(fecha, precio, nombre, idModoJuego, idEncantamiento, estatus) values ('1/12/2022', 7, 'nombre7', '7', '7', '1')
-
-INSERT INTO Comercio(fecha, precio, nombre, idModoJuego, idEncantamiento, estatus) values ('1/12/2022', 8, 'nombre8', '8', '8', '1')
-
-INSERT INTO Comercio(fecha, precio, nombre, idModoJuego, idEncantamiento, estatus) values ('1/12/2022', 9, 'nombre9', '9', '9', '1')
-
-INSERT INTO Comercio(fecha, precio, nombre, idModoJuego, idEncantamiento, estatus) values ('1/12/2022', 10, 'nombre10', '10', '10', '1')
-
-
---ConfigUsuario
-INSERT INTO ConfigUsuario(fecha, nombre, servicio, idEstadistica, estatus) values ('1/12/2022', 'nombre1', 'servicio1', '1', '1')
-
-INSERT INTO ConfigUsuario(fecha, nombre, servicio, idEstadistica, estatus) values ('1/12/2022', 'nombre2', 'servicio2', '2', '1')
-
-INSERT INTO ConfigUsuario(fecha, nombre, servicio, idEstadistica, estatus) values ('1/12/2022', 'nombre3', 'servicio3', '3', '1')
-
-INSERT INTO ConfigUsuario(fecha, nombre, servicio, idEstadistica, estatus) values ('1/12/2022', 'nombre4', 'servicio4', '4', '1')
-
-INSERT INTO ConfigUsuario(fecha, nombre, servicio, idEstadistica, estatus) values ('1/12/2022', 'nombre5', 'servicio5', '5', '1')
-
-INSERT INTO ConfigUsuario(fecha, nombre, servicio, idEstadistica, estatus) values ('1/12/2022', 'nombre6', 'servicio6', '6', '1')
-
-INSERT INTO ConfigUsuario(fecha, nombre, servicio, idEstadistica, estatus) values ('1/12/2022', 'nombre7', 'servicio7', '7', '1')
-
-INSERT INTO ConfigUsuario(fecha, nombre, servicio, idEstadistica, estatus) values ('1/12/2022', 'nombre8', 'servicio8', '8', '1')
-
-INSERT INTO ConfigUsuario(fecha, nombre, servicio, idEstadistica, estatus) values ('1/12/2022', 'nombre9', 'servicio9', '9', '1')
-
-INSERT INTO ConfigUsuario(fecha, nombre, servicio, idEstadistica, estatus) values ('1/12/2022','nombre10','servicio10','10','1')
-
-
---Coordenada
-INSERT INTO Coordenada(fecha, cantidad, idChat, estatus) values ('1/12/2022', 1, '1', '1')
-
-INSERT INTO Coordenada(fecha, cantidad, idChat, estatus) values ('1/12/2022', 2, '2', '1')
-
-INSERT INTO Coordenada(fecha, cantidad, idChat, estatus) values ('1/12/2022', 3, '3', '1')
-
-INSERT INTO Coordenada(fecha, cantidad, idChat, estatus) values ('1/12/2022', 4, '4', '1')
-
-INSERT INTO Coordenada(fecha, cantidad, idChat, estatus) values ('1/12/2022', 5, '5', '1')
-
-INSERT INTO Coordenada(fecha, cantidad, idChat, estatus) values ('1/12/2022', 6, '6', '1')
-
-INSERT INTO Coordenada(fecha, cantidad, idChat, estatus) values ('1/12/2022', 7, '7', '1')
-
-INSERT INTO Coordenada(fecha, cantidad, idChat, estatus) values ('1/12/2022', 8, '8', '1')
-
-INSERT INTO Coordenada(fecha, cantidad, idChat, estatus) values ('1/12/2022', 9, '9', '1')
-
-INSERT INTO Coordenada(fecha, cantidad, idChat, estatus) values ('1/12/2022', 10, '10', '1')
-
-
---Dimension
-INSERT INTO Dimension(cantidad, Parche, direccion, horasalida, horallegada, idTemplo, estatus) values ('Cantidad1','Parche1', 'Direccion1', '1/12/2022', '1/12/2022', '1', '1')
-
-INSERT INTO Dimension(cantidad, Parche, direccion, horasalida, horallegada, idTemplo, estatus) values ('Cantidad2','Parche2', 'Direccion2', '1/12/2022', '1/12/2022', '2', '1')
-
-INSERT INTO Dimension(cantidad, Parche, direccion, horasalida, horallegada, idTemplo, estatus) values ('Cantidad3','Parche3', 'Direccion3', '1/12/2022', '1/12/2022', '3', '1')
-
-INSERT INTO Dimension(cantidad, Parche, direccion, horasalida, horallegada, idTemplo, estatus) values ('Cantidad4','Parche4', 'Direccion4', '1/12/2022', '1/12/2022', '4', '1')
-
-INSERT INTO Dimension(cantidad, Parche, direccion, horasalida, horallegada, idTemplo, estatus) values ('Cantidad5','Parche5', 'Direccion5', '1/12/2022', '1/12/2022', '5', '1')
-
-INSERT INTO Dimension(cantidad, Parche, direccion, horasalida, horallegada, idTemplo, estatus) values ('Cantidad6','Parche6', 'Direccion6', '1/12/2022', '1/12/2022', '6', '1')
-
-INSERT INTO Dimension(cantidad, Parche, direccion, horasalida, horallegada, idTemplo, estatus) values ('Cantidad7','Parche7', 'Direccion7', '1/12/2022', '1/12/2022', '7', '1')
-
-INSERT INTO Dimension(cantidad, Parche, direccion, horasalida, horallegada, idTemplo, estatus) values ('Cantidad8','Parche8', 'Direccion8', '1/12/2022', '1/12/2022', '8', '1')
-
-INSERT INTO Dimension(cantidad, Parche, direccion, horasalida, horallegada, idTemplo, estatus) values ('Cantidad9','Parche9', 'Direccion9', '1/12/2022', '1/12/2022', '9', '1')
-
-INSERT INTO Dimension(cantidad, Parche, direccion, horasalida, horallegada, idTemplo, estatus) values ('Cantidad10','Parche10', 'Direccion10', '1/12/2022', '1/12/2022', '10', '1')
-
-
-
---Fluido
-INSERT INTO Fluido(numero, numerodiscapaBloquedos, idTemplo, estatus) values(1,  1, '1', '1')
-
-INSERT INTO Fluido(numero, numerodiscapaBloquedos, idTemplo, estatus) values(2,  2, '2', '1')
-
-INSERT INTO Fluido(numero, numerodiscapaBloquedos, idTemplo, estatus) values(3,  3, '3', '1')
-
-INSERT INTO Fluido(numero, numerodiscapaBloquedos, idTemplo, estatus) values(4,  4, '4', '1')
-
-INSERT INTO Fluido(numero, numerodiscapaBloquedos, idTemplo, estatus) values(5,  5, '5', '1')
-
-INSERT INTO Fluido(numero, numerodiscapaBloquedos, idTemplo, estatus) values(6,  6, '6', '1')
-
-INSERT INTO Fluido(numero, numerodiscapaBloquedos, idTemplo, estatus) values(7,  7, '7', '1')
-
-INSERT INTO Fluido(numero, numerodiscapaBloquedos, idTemplo, estatus) values(8,  8, '8', '1')
-
-INSERT INTO Fluido(numero, numerodiscapaBloquedos, idTemplo, estatus) values(9,  9, '9', '1')
-
-INSERT INTO Fluido(numero, numerodiscapaBloquedos, idTemplo, estatus) values(10,  10, '10', '1')
-
-
---Fortaleza
-INSERT INTO Fortaleza(fecha, remitente, cantidad, idConfigMundo, idChat, estatus) values('1/12/2022', 'remitente1', 1, '1', '1', '1')
-
-INSERT INTO Fortaleza(fecha, remitente, cantidad, idConfigMundo, idChat, estatus) values('1/12/2022', 'remitente2', 2, '2', '2', '1')
-
-INSERT INTO Fortaleza(fecha, remitente, cantidad, idConfigMundo, idChat, estatus) values('1/12/2022', 'remitente3', 3, '3', '3', '1')
-
-INSERT INTO Fortaleza(fecha, remitente, cantidad, idConfigMundo, idChat, estatus) values('1/12/2022', 'remitente4', 4, '4', '4', '1')
-
-INSERT INTO Fortaleza(fecha, remitente, cantidad, idConfigMundo, idChat, estatus) values('1/12/2022', 'remitente5', 5, '5', '5', '1')
-
-INSERT INTO Fortaleza(fecha, remitente, cantidad, idConfigMundo, idChat, estatus) values('1/12/2022', 'remitente6', 6, '6', '6', '1')
-
-INSERT INTO Fortaleza(fecha, remitente, cantidad, idConfigMundo, idChat, estatus) values('1/12/2022', 'remitente7', 7, '7', '7', '1')
-
-INSERT INTO Fortaleza(fecha, remitente, cantidad, idConfigMundo, idChat, estatus) values('1/12/2022', 'remitente8', 8, '8', '8', '1')
-
-INSERT INTO Fortaleza(fecha, remitente, cantidad, idConfigMundo, idChat, estatus) values('1/12/2022', 'remitente9', 9, '9', '9', '1')
-
-INSERT INTO Fortaleza(fecha, remitente, cantidad, idConfigMundo, idChat, estatus) values('1/12/2022', 'remitente10', 10, '10', '10', '1')
-
-
---Generacion
-INSERT INTO Generacion(fecha, remitente, cantidad, idConfigMundo,idPesca, estatus) values('1/12/2022', 'remitente1', 1, '1', '1', '1')
-
-INSERT INTO Generacion(fecha, remitente, cantidad, idConfigMundo, idPesca, estatus) values('1/12/2022', 'remitente2', 2, '2', '2', '1')
-
-INSERT INTO Generacion(fecha, remitente, cantidad, idConfigMundo, idPesca, estatus) values('1/12/2022', 'remitente3', 3, '3', '3', '1')
-
-INSERT INTO Generacion(fecha, remitente, cantidad, idConfigMundo, idPesca, estatus) values('1/12/2022', 'remitente4', 4, '4', '4', '1')
-
-INSERT INTO Generacion(fecha, remitente, cantidad, idConfigMundo, idPesca, estatus) values('1/12/2022', 'remitente5', 5, '5', '5', '1')
-
-INSERT INTO Generacion(fecha, remitente, cantidad, idConfigMundo, idPesca, estatus) values('1/12/2022', 'remitente6', 6, '6', '6', '1')
-
-INSERT INTO Generacion(fecha, remitente, cantidad, idConfigMundo, idPesca,estatus) values('1/12/2022', 'remitente7', 7, '7', '7', '1')
-
-INSERT INTO Generacion(fecha, remitente, cantidad, idConfigMundo, idPesca, estatus) values('1/12/2022', 'remitente8', 8, '8', '8','1')
-
-INSERT INTO Generacion(fecha, remitente, cantidad, idConfigMundo, idPesca, estatus) values('1/12/2022', 'remitente9', 9, '9', '9','1')
-
-INSERT INTO Generacion(fecha, remitente, cantidad, idConfigMundo, idPesca, estatus) values('1/12/2022', 'remitente10', 10, '10', '10','1')
-
-
---Herramienta
-INSERT INTO Herramienta(entrada, salida, horasextras, idEstadistica, estatus) values('8:50', '8:50', 'horaextra1', '1', '1')
-
-INSERT INTO Herramienta(entrada, salida, horasextras, idEstadistica, estatus) values('8:50', '8:50', 'horaextra2', '2', '1')
-
-INSERT INTO Herramienta(entrada, salida, horasextras, idEstadistica, estatus) values('8:50', '8:50', 'horaextra3', '3', '1')
-
-INSERT INTO Herramienta(entrada, salida, horasextras, idEstadistica, estatus) values('8:50', '8:50', 'horaextra4', '4', '1')
-
-INSERT INTO Herramienta(entrada, salida, horasextras, idEstadistica, estatus) values('8:50', '8:50', 'horaextra5', '5', '1')
-
-INSERT INTO Herramienta(entrada, salida, horasextras, idEstadistica, estatus) values('8:50', '8:50', 'horaextra6', '6', '1')
-
-INSERT INTO Herramienta(entrada, salida, horasextras, idEstadistica, estatus) values('8:50', '8:50', 'horaextra7', '7', '1')
-
-INSERT INTO Herramienta(entrada, salida, horasextras, idEstadistica, estatus) values('8:50', '8:50', 'horaextra8', '8', '1')
-
-INSERT INTO Herramienta(entrada, salida, horasextras, idEstadistica, estatus) values('8:50', '8:50', 'horaextra9', '9', '1')
-
-INSERT INTO Herramienta(entrada, salida, horasextras, idEstadistica, estatus) values('8:50', '8:50', 'horaextra10', '10', '1')
-
-
---Inventario
-INSERT INTO Inventario(nombre, tamaño, Jefe, idEncantamiento, estatus) values('nombre1', 'tamaño1', 'Jefe1','1', '1')
-
-INSERT INTO Inventario(nombre, tamaño,Jefe, idEncantamiento, estatus) values('nombre2', 'tamaño2', 'Jefe2', '2', '1')
-
-INSERT INTO Inventario(nombre, tamaño, Jefe,idEncantamiento, estatus) values('nombre3', 'tamaño3', 'Jefe3','3', '1')
-
-INSERT INTO Inventario(nombre, tamaño, Jefe,idEncantamiento, estatus) values('nombre4', 'tamaño4', 'Jefe4','4', '1')
-
-INSERT INTO Inventario(nombre, tamaño, Jefe,idEncantamiento, estatus) values('nombre5', 'tamaño5', 'Jefe5','5', '1')
-
-INSERT INTO Inventario(nombre, tamaño, Jefe,idEncantamiento, estatus) values('nombre6', 'tamaño6', 'Jefe6','6', '1')
-
-INSERT INTO Inventario(nombre, tamaño, Jefe, idEncantamiento, estatus) values('nombre7', 'tamaño7', 'Jefe7','7', '1')
-
-INSERT INTO Inventario(nombre, tamaño, Jefe ,idEncantamiento, estatus) values('nombre8', 'tamaño8','Jefe8', '8', '1')
-
-INSERT INTO Inventario(nombre, tamaño, Jefe ,idEncantamiento, estatus) values('nombre9', 'tamaño9','Jefe9', '9', '1')
-
-INSERT INTO Inventario(nombre, tamaño,Jefe, idEncantamiento, estatus) values('nombre10', 'tamaño10','Jefe10', '10', '1')
-
-
---Item
-INSERT INTO Item(fecha, costo, persona, idTemplo, estatus) values('1/12/2022','costo1','persona1', '1', '1')
-
-INSERT INTO Item(fecha, costo, persona, idTemplo, estatus) values('1/12/2022','costo2','persona2', '2', '1')
-
-INSERT INTO Item(fecha, costo, persona, idTemplo, estatus) values('1/12/2022','costo3','persona3', '3', '1')
-
-INSERT INTO Item(fecha, costo, persona, idTemplo, estatus) values('1/12/2022','costo4','persona4', '4', '1')
-
-INSERT INTO Item(fecha, costo, persona, idTemplo, estatus) values('1/12/2022','costo5','persona5', '5', '1')
-
-INSERT INTO Item(fecha, costo, persona, idTemplo, estatus) values('1/12/2022','costo6','persona6', '6', '1')
-
-INSERT INTO Item(fecha, costo, persona, idTemplo, estatus) values('1/12/2022','costo7','persona7', '7', '1')
-
-INSERT INTO Item(fecha, costo, persona, idTemplo, estatus) values('1/12/2022','costo8','persona8', '8', '1')
-
-INSERT INTO Item(fecha, costo, persona, idTemplo, estatus) values('1/12/2022','costo9','persona9', '9', '1')
-
-INSERT INTO Item(fecha, costo, persona, idTemplo, estatus) values('1/12/2022','costo10','persona10', '10', '1')
-
-
-
-
---Jugador
-INSERT INTO Jugador(tipo, lugar, idTemplo, estatus) values('tipo1','lugar1', '1', '1')
-
-INSERT INTO Jugador(tipo, lugar, idTemplo, estatus) values('tipo2','lugar2', '2', '1')
-
-INSERT INTO Jugador(tipo, lugar, idTemplo, estatus) values('tipo3','lugar3', '3', '1')
-
-INSERT INTO Jugador(tipo, lugar, idTemplo, estatus) values('tipo4','lugar4', '4', '1')
-
-INSERT INTO Jugador(tipo, lugar, idTemplo, estatus) values('tipo5','lugar5', '5', '1')
-
-INSERT INTO Jugador(tipo, lugar, idTemplo, estatus) values('tipo6','lugar6', '6', '1')
-
-INSERT INTO Jugador(tipo, lugar, idTemplo, estatus) values('tipo7','lugar7', '7', '1')
-
-INSERT INTO Jugador(tipo, lugar, idTemplo, estatus) values('tipo8','lugar8', '8', '1')
-
-INSERT INTO Jugador(tipo, lugar, idTemplo, estatus) values('tipo9','lugar9', '9', '1')
-
-INSERT INTO Jugador(tipo, lugar, idTemplo, estatus) values('tipo10','lugar10', '10', '1')
-
-
-
-
---Mascota
-INSERT INTO Mascota(nombre, existencia, salida, idEncantamiento, estatus) values('nombre1',1, 1, '1', '1')
-
-INSERT INTO Mascota(nombre, existencia, salida, idEncantamiento, estatus) values('nombre2',2, 2, '1', '1')
-
-INSERT INTO Mascota(nombre, existencia, salida, idEncantamiento, estatus) values('nombre3',3, 3, '1', '1')
-
-INSERT INTO Mascota(nombre, existencia, salida, idEncantamiento, estatus) values('nombre4',4, 4, '1', '1')
-
-INSERT INTO Mascota(nombre, existencia, salida, idEncantamiento, estatus) values('nombre5',5, 5, '1', '1')
-
-INSERT INTO Mascota(nombre, existencia, salida, idEncantamiento, estatus) values('nombre6',6, 6, '1', '1')
-
-INSERT INTO Mascota(nombre, existencia, salida, idEncantamiento, estatus) values('nombre7',7, 7, '1', '1')
-
-INSERT INTO Mascota(nombre, existencia, salida, idEncantamiento, estatus) values('nombre8',8, 8, '1', '1')
-
-INSERT INTO Mascota(nombre, existencia, salida, idEncantamiento, estatus) values('nombre9',9, 9, '1', '1')
-
-INSERT INTO Mascota(nombre, existencia, salida, idEncantamiento, estatus) values('nombre10',10, 10, '1', '1')
-
-
-	
-
---MesaTrabajo
-INSERT INTO MesaTrabajo(nombre, cantidad, material, idTemplo, estatus) values('nombre1', 1, 'material1', '1', '1')
-
-INSERT INTO MesaTrabajo(nombre, cantidad, material, idTemplo, estatus) values('nombre2', 2, 'material2', '2', '1')
-
-INSERT INTO MesaTrabajo(nombre, cantidad, material, idTemplo, estatus) values('nombre3', 3, 'material3', '3', '1')
-
-INSERT INTO MesaTrabajo(nombre, cantidad, material, idTemplo, estatus) values('nombre4', 4, 'material4', '4', '1')
-
-INSERT INTO MesaTrabajo(nombre, cantidad, material, idTemplo, estatus) values('nombre5', 5, 'material5', '5', '1')
-
-INSERT INTO MesaTrabajo(nombre, cantidad, material, idTemplo, estatus) values('nombre6', 6, 'material6', '6', '1')
-
-INSERT INTO MesaTrabajo(nombre, cantidad, material, idTemplo, estatus) values('nombre7', 7, 'material7', '7', '1')
-
-INSERT INTO MesaTrabajo(nombre, cantidad, material, idTemplo, estatus) values('nombre8', 8, 'material8', '8', '1')
-
-INSERT INTO MesaTrabajo(nombre, cantidad, material, idTemplo, estatus) values('nombre9', 9, 'material9', '9', '1')
-
-INSERT INTO MesaTrabajo(nombre, cantidad, material, idTemplo, estatus) values('nombre10', 10, 'material10', '10', '1')
-
-
-
-
-
-
---ModoServidor
-INSERT INTO ModoServidor(catidad, servicio, fecha, idTemplo, estatus) values(1, 'servicio1', '1/12/2022', '1', '1')
-
-INSERT INTO ModoServidor(catidad, servicio, fecha, idTemplo, estatus) values(2, 'servicio2', '1/12/2022', '2', '1')
-
-INSERT INTO ModoServidor(catidad, servicio, fecha, idTemplo, estatus) values(3, 'servicio3', '1/12/2022', '3', '1')
-
-INSERT INTO ModoServidor(catidad, servicio, fecha, idTemplo, estatus) values(4, 'servicio4', '1/12/2022', '4', '1')
-
-INSERT INTO ModoServidor(catidad, servicio, fecha, idTemplo, estatus) values(5, 'servicio5', '1/12/2022', '5', '1')
-
-INSERT INTO ModoServidor(catidad, servicio, fecha, idTemplo, estatus) values(6, 'servicio6', '1/12/2022', '6', '1')
-
-INSERT INTO ModoServidor(catidad, servicio, fecha, idTemplo, estatus) values(7, 'servicio7', '1/12/2022', '7', '1')
-
-INSERT INTO ModoServidor(catidad, servicio, fecha, idTemplo, estatus) values(8, 'servicio8', '1/12/2022', '8', '1')
-
-INSERT INTO ModoServidor(catidad, servicio, fecha, idTemplo, estatus) values(9, 'servicio9', '1/12/2022', '9', '1')
-
-INSERT INTO ModoServidor(catidad, servicio, fecha, idTemplo, estatus) values(10, 'servicio10', '1/12/2022', '10', '1')
-
-
---Mundo
-INSERT INTO Mundo(numero, peso, remitente, destinatario, idEvento, idSonido, idStack, estatus) values(1, 'peso1', 'remitente1', 'destinatario1', '1', '1', '1', '1')
-
-INSERT INTO Mundo(numero, peso, remitente, destinatario, idEvento, idSonido, idStack, estatus) values(2, 'peso2', 'remitente2', 'destinatario2', '2', '2', '1', '1')
-
-INSERT INTO Mundo(numero, peso, remitente, destinatario, idEvento, idSonido, idStack, estatus) values(3, 'peso3', 'remitente3', 'destinatario3', '3', '3', '1', '1')
-
-INSERT INTO Mundo(numero, peso, remitente, destinatario, idEvento, idSonido, idStack, estatus) values(4, 'peso4', 'remitente4', 'destinatario4', '4', '4', '1', '1')
-
-INSERT INTO Mundo(numero, peso, remitente, destinatario, idEvento, idSonido, idStack, estatus) values(5, 'peso5', 'remitente5', 'destinatario5', '5', '5', '1', '1')
-
-INSERT INTO Mundo(numero, peso, remitente, destinatario, idEvento, idSonido, idStack, estatus) values(6, 'peso6', 'remitente6', 'destinatario6', '6', '6', '1', '1')
-
-INSERT INTO Mundo(numero, peso, remitente, destinatario, idEvento, idSonido, idStack, estatus) values(7, 'peso7', 'remitente7', 'destinatario7', '7', '7', '1', '1')
-
-INSERT INTO Mundo(numero, peso, remitente, destinatario, idEvento, idSonido, idStack, estatus) values(8, 'peso8', 'remitente8', 'destinatario8', '8', '8', '1', '1')
-
-INSERT INTO Mundo(numero, peso, remitente, destinatario, idEvento, idSonido, idStack, estatus) values(9, 'peso9', 'remitente9', 'destinatario9', '9', '9', '1', '1')
-
-INSERT INTO Mundo(numero, peso, remitente, destinatario, idEvento, idSonido, idStack, estatus) values(10, 'peso10', 'remitente10', 'destinatario10', '10', '10', '1', '1')
-
-
-
-
-
-
---Parche
-INSERT INTO Parche(nombre, precio, cantidad, idSonido, idLogro, idAmigo, idEvento, idEfecto, idChunk, estatus) values('nombre1', 1, 1, '1', '1', '1', '1', '1', '1', '1')
-
-INSERT INTO Parche(nombre, precio, cantidad, idSonido, idLogro, idAmigo, idEvento, idEfecto, idChunk, estatus) values('nombre2', 2, 2, '2', '2', '2', '2', '2', '2', '2')
-
-INSERT INTO Parche(nombre, precio, cantidad, idSonido, idLogro, idAmigo, idEvento, idEfecto, idChunk, estatus) values('nombre3', 3, 3, '3', '3', '3', '3', '3', '3', '3')
-
-INSERT INTO Parche(nombre, precio, cantidad, idSonido, idLogro, idAmigo, idEvento, idEfecto, idChunk, estatus) values('nombre4', 4, 4, '4', '4', '4', '4', '4', '4', '4')
-
-INSERT INTO Parche(nombre, precio, cantidad, idSonido, idLogro, idAmigo, idEvento, idEfecto, idChunk, estatus) values('nombre5', 5, 5, '5', '5', '5', '5', '5', '5', '5')
-
-INSERT INTO Parche(nombre, precio, cantidad, idSonido, idLogro, idAmigo, idEvento, idEfecto, idChunk, estatus) values('nombre6', 6, 6, '6', '6', '6', '6', '6', '6', '6')
-
-INSERT INTO Parche(nombre, precio, cantidad, idSonido, idLogro, idAmigo, idEvento, idEfecto, idChunk, estatus) values('nombre7', 7, 7, '7', '7', '7', '7', '7', '7', '7')
-
-INSERT INTO Parche(nombre, precio, cantidad, idSonido, idLogro, idAmigo, idEvento, idEfecto, idChunk, estatus) values('nombre8', 8, 8, '8', '8', '8', '8', '8', '8', '8')
-
-INSERT INTO Parche(nombre, precio, cantidad, idSonido, idLogro, idAmigo, idEvento, idEfecto, idChunk, estatus) values('nombre9', 9, 9, '9', '9', '9', '9', '9', '9', '9')
-
-INSERT INTO Parche(nombre, precio, cantidad, idSonido, idLogro, idAmigo, idEvento, idEfecto, idChunk, estatus) values('nombre10', 10, 10, '10', '10', '10', '10', '10', '10', '1')
-
-
-
---Plugin
-INSERT INTO Plugin(Plugin, numero, idEstadistica, estatus) values('Plugin1', 1, '1', '1')
-
-INSERT INTO Plugin(Plugin, numero, idEstadistica, estatus) values('Plugin2', 2, '2', '1')
-
-INSERT INTO Plugin(Plugin, numero, idEstadistica, estatus) values('Plugin3', 3, '3', '1')
-
-INSERT INTO Plugin(Plugin, numero, idEstadistica, estatus) values('Plugin4', 4, '4', '1')
-
-INSERT INTO Plugin(Plugin, numero, idEstadistica, estatus) values('Plugin5', 5, '5', '1')
-
-INSERT INTO Plugin(Plugin, numero, idEstadistica, estatus) values('Plugin6', 6, '6', '1')
-
-INSERT INTO Plugin(Plugin, numero, idEstadistica, estatus) values('Plugin7', 7, '7', '1')
-
-INSERT INTO Plugin(Plugin, numero, idEstadistica, estatus) values('Plugin8', 8, '8', '1')
-
-INSERT INTO Plugin(Plugin, numero, idEstadistica, estatus) values('Plugin9', 9, '9', '1')
-
-INSERT INTO Plugin(Plugin, numero, idEstadistica, estatus) values('Plugin10', 10, '10', '1')
-
-
---Pocion
-INSERT INTO Pocion(descripcion, Mascota, cantidad, idEncantamiento, idModoJuego, estatus) values('descrpcion1', 'Mascota1', 1, '1', '1', '1')
-
-INSERT INTO Pocion(descripcion, Mascota, cantidad, idEncantamiento, idModoJuego, estatus) values('descrpcion2', 'Mascota2', 2, '2', '2', '1')
-
-INSERT INTO Pocion(descripcion, Mascota, cantidad, idEncantamiento, idModoJuego, estatus) values('descrpcion3', 'Mascota3', 3, '3', '3', '1')
-
-INSERT INTO Pocion(descripcion, Mascota, cantidad, idEncantamiento, idModoJuego, estatus) values('descrpcion4', 'Mascota4', 4, '4', '4', '1')
-
-INSERT INTO Pocion(descripcion, Mascota, cantidad, idEncantamiento, idModoJuego, estatus) values('descrpcion5', 'Mascota5', 5, '5', '5', '1')
-
-INSERT INTO Pocion(descripcion, Mascota, cantidad, idEncantamiento, idModoJuego, estatus) values('descrpcion6', 'Mascota6', 6, '6', '6', '1')
-
-INSERT INTO Pocion(descripcion, Mascota, cantidad, idEncantamiento, idModoJuego, estatus) values('descrpcion7', 'Mascota7', 7, '7', '7', '1')
-
-INSERT INTO Pocion(descripcion, Mascota, cantidad, idEncantamiento, idModoJuego, estatus) values('descrpcion8', 'Mascota8', 8, '8', '8', '1')
-
-INSERT INTO Pocion(descripcion, Mascota, cantidad, idEncantamiento, idModoJuego, estatus) values('descrpcion9', 'Mascota9', 9, '9', '9', '1')
-
-INSERT INTO Pocion(descripcion, Mascota, cantidad, idEncantamiento, idModoJuego, estatus) values('descrpcion10', 'Mascota10', 10, '10', '10', '1')
-
-
---Servidor
-INSERT INTO Servidor(nombre, apellidoPaterno, apellidoMaterno, calle, numero, ciudad, telefono, idEstructura, estatus) values('nombre1', 'apellidop1', 'apellidom1', 'calle1', 1, 'ciudad1', 1, '1', '1')
-
-INSERT INTO Servidor(nombre, apellidoPaterno, apellidoMaterno, calle, numero, ciudad, telefono, idEstructura, estatus) values('nombre2', 'apellidop2', 'apellidom2', 'calle2', 2, 'ciudad2', 2, '2', '1')
-
-INSERT INTO Servidor(nombre, apellidoPaterno, apellidoMaterno, calle, numero, ciudad, telefono, idEstructura, estatus) values('nombre3', 'apellidop3', 'apellidom3', 'calle3', 3, 'ciudad3', 3, '3', '1')
-
-INSERT INTO Servidor(nombre, apellidoPaterno, apellidoMaterno, calle, numero, ciudad, telefono, idEstructura, estatus) values('nombre4', 'apellidop4', 'apellidom4', 'calle4', 4, 'ciudad4', 4, '4', '1')
-
-INSERT INTO Servidor(nombre, apellidoPaterno, apellidoMaterno, calle, numero, ciudad, telefono, idEstructura, estatus) values('nombre5', 'apellidop5', 'apellidom5', 'calle5', 5, 'ciudad5', 5, '5', '1')
-
-INSERT INTO Servidor(nombre, apellidoPaterno, apellidoMaterno, calle, numero, ciudad, telefono, idEstructura, estatus) values('nombre6', 'apellidop6', 'apellidom6', 'calle6', 6, 'ciudad6', 6, '6', '1')
-
-INSERT INTO Servidor(nombre, apellidoPaterno, apellidoMaterno, calle, numero, ciudad, telefono, idEstructura, estatus) values('nombre7', 'apellidop7', 'apellidom7', 'calle7', 7, 'ciudad7', 7, '7', '1')
-
-INSERT INTO Servidor(nombre, apellidoPaterno, apellidoMaterno, calle, numero, ciudad, telefono, idEstructura, estatus) values('nombre8', 'apellidop8', 'apellidom8', 'calle8', 8, 'ciudad8', 8, '8', '1')
-
-INSERT INTO Servidor(nombre, apellidoPaterno, apellidoMaterno, calle, numero, ciudad, telefono, idEstructura, estatus) values('nombre9', 'apellidop9', 'apellidom9', 'calle9', 9, 'ciudad9', 9, '9', '1')
-
-INSERT INTO Servidor(nombre, apellidoPaterno, apellidoMaterno, calle, numero, ciudad, telefono, idEstructura, estatus) values('nombre10', 'apellidop10', 'apellidom9', 'calle9', 10, 'ciudad10', 10, '10', '1')
-
-
-SELECT *FROM Amigo
---MundoParche
-INSERT INTO MundoParche(cantidad, idAmigo, idParche, estatus) values(1, '1', '1', '1')
-
-INSERT INTO MundoParche(cantidad, idAmigo, idParche, estatus) values(1, '2', '2', '2')
-
-INSERT INTO MundoParche(cantidad, idAmigo, idParche, estatus) values(3, '3', '3', '3')
-
-INSERT INTO MundoParche(cantidad, idAmigo,  idParche, estatus) values(4, '4', '4', '4')
-
-INSERT INTO MundoParche(cantidad, idAmigo, idParche,  estatus) values(5, '5', '5', '5')
-
-INSERT INTO MundoParche(cantidad, idAmigo, idParche, estatus) values(6,'6', '6', '6')
-
-INSERT INTO MundoParche(cantidad, idAmigo, idParche, estatus) values(7, '7', '7', '7')
-
-INSERT INTO MundoParche(cantidad, idAmigo,  idParche, estatus) values(8, '8', '8', '8')
-
-INSERT INTO MundoParche(cantidad, idAmigo, idParche, estatus) values(9, '9', '9', '9')
-
-INSERT INTO MundoParche(cantidad, idAmigo, idParche, estatus) values(10, '10', '10', '10')
-
-
---EncantamientoEfecto
-INSERT INTO EncantamientoEfecto(idChat, idMenu, estatus) values('1', '1', '1')
-
-INSERT INTO EncantamientoEfecto(idChat, idMenu, estatus) values('2', '2', '1')
-
-INSERT INTO EncantamientoEfecto(idChat, idMenu, estatus) values('3', '3', '1')
-
-INSERT INTO EncantamientoEfecto(idChat, idMenu, estatus) values('4', '4', '1')
-
-INSERT INTO EncantamientoEfecto(idChat, idMenu, estatus) values('5', '5', '1')
-
-INSERT INTO EncantamientoEfecto(idChat, idMenu, estatus) values('6', '6', '1')
-
-INSERT INTO EncantamientoEfecto(idChat, idMenu, estatus) values('7', '7', '1')
-
-INSERT INTO EncantamientoEfecto(idChat, idMenu, estatus) values('8', '8', '1')
-
-INSERT INTO EncantamientoEfecto(idChat, idMenu, estatus) values('9', '9', '1')
-
-INSERT INTO EncantamientoEfecto(idChat, idMenu, estatus) values('10', '10', '1')
-
-
---JugadorAmigo
-INSERT INTO JugadorAmigo(idChunk, idChat, estatus) values('1', '1', '1')
-
-INSERT INTO JugadorAmigo(idChunk, idChat, estatus) values('2', '2', '1')
-
-INSERT INTO JugadorAmigo(idChunk, idChat, estatus) values('3', '3', '1')
-
-INSERT INTO JugadorAmigo(idChunk, idChat, estatus) values('4', '4', '1')
-
-INSERT INTO JugadorAmigo(idChunk, idChat, estatus) values('5', '5', '1')
-
-INSERT INTO JugadorAmigo(idChunk, idChat, estatus) values('6', '6', '1')
-
-INSERT INTO JugadorAmigo(idChunk, idChat, estatus) values('7', '7', '1')
-
-INSERT INTO JugadorAmigo(idChunk, idChat, estatus) values('8', '8', '1')
-
-INSERT INTO JugadorAmigo(idChunk, idChat, estatus) values('9', '9', '1')
-
-INSERT INTO JugadorAmigo(idChunk, idChat, estatus) values('10', '10', '1')
-
-
---JugadorComercio
-INSERT INTO JugadorComercio(idEstadistica, idArmadura, estatus) values('1', '1', '1')
-
-INSERT INTO JugadorComercio(idEstadistica, idArmadura, estatus) values('2', '2', '1')
-
-INSERT INTO JugadorComercio(idEstadistica, idArmadura, estatus) values('3', '3', '1')
-
-INSERT INTO JugadorComercio(idEstadistica, idArmadura, estatus) values('4', '4', '1')
-
-INSERT INTO JugadorComercio(idEstadistica, idArmadura, estatus) values('5', '5', '1')
-
-INSERT INTO JugadorComercio(idEstadistica, idArmadura, estatus) values('6', '6', '1')
-
-INSERT INTO JugadorComercio(idEstadistica, idArmadura, estatus) values('7', '7', '1')
-
-INSERT INTO JugadorComercio(idEstadistica, idArmadura, estatus) values('8', '8', '1')
-
-INSERT INTO JugadorComercio(idEstadistica, idArmadura, estatus) values('9', '9', '1')
-
-INSERT INTO JugadorComercio(idEstadistica, idArmadura, estatus) values('10', '10', '1')
-
-
---JugadorItem
-INSERT INTO JugadorItem(idJefe, idParche, estatus) values('1', '1', '1')
-
-INSERT INTO JugadorItem(idJefe, idParche, estatus) values('2', '2', '1')
-
-INSERT INTO JugadorItem(idJefe, idParche, estatus) values('3', '3', '1')
-
-INSERT INTO JugadorItem(idJefe, idParche, estatus) values('4', '4', '1')
-
-INSERT INTO JugadorItem(idJefe, idParche, estatus) values('5', '5', '1')
-
-INSERT INTO JugadorItem(idJefe, idParche, estatus) values('6', '6', '1')
-
-INSERT INTO JugadorItem(idJefe, idParche, estatus) values('7', '7', '1')
-
-INSERT INTO JugadorItem(idJefe, idParche, estatus) values('8', '8', '1')
-
-INSERT INTO JugadorItem(idJefe, idParche, estatus) values('9', '9', '1')
-
-INSERT INTO JugadorItem(idJefe, idParche, estatus) values('10', '10', '1')
-
-
---JugadorServidor
-INSERT INTO JugadorServidor(idParche, idModd, estatus) values('1', '1', '1')
-
-INSERT INTO JugadorServidor(idParche, idModd, estatus) values('2', '2', '1')
-
-INSERT INTO JugadorServidor(idParche, idModd, estatus) values('3', '3', '1')
-
-INSERT INTO JugadorServidor(idParche, idModd, estatus) values('4', '4', '1')
-
-INSERT INTO JugadorServidor(idParche, idModd, estatus) values('5', '5', '1')
-
-INSERT INTO JugadorServidor(idParche, idModd, estatus) values('6', '6', '1')
-
-INSERT INTO JugadorServidor(idParche, idModd, estatus) values('7', '7', '1')
-
-INSERT INTO JugadorServidor(idParche, idModd, estatus) values('8', '8', '1')
-
-INSERT INTO JugadorServidor(idParche, idModd, estatus) values('9', '9', '1')
-
-INSERT INTO JugadorServidor(idParche, idModd, estatus) values('10', '10', '1')
-
-
---MesaTrabajoEncantamiento
-INSERT INTO MesaTrabajoEncantamiento(idParche, idTesoro, estatus) values('1', '1', '1')
-
-INSERT INTO MesaTrabajoEncantamiento(idParche, idTesoro, estatus) values('2', '2', '1')
-
-INSERT INTO MesaTrabajoEncantamiento(idParche, idTesoro, estatus) values('3', '3', '1')
-
-INSERT INTO MesaTrabajoEncantamiento(idParche, idTesoro, estatus) values('4', '4', '1')
-
-INSERT INTO MesaTrabajoEncantamiento(idParche, idTesoro, estatus) values('5', '5', '1')
-
-INSERT INTO MesaTrabajoEncantamiento(idParche, idTesoro, estatus) values('6', '6', '1')
-
-INSERT INTO MesaTrabajoEncantamiento(idParche, idTesoro, estatus) values('7', '7', '1')
-
-INSERT INTO MesaTrabajoEncantamiento(idParche, idTesoro, estatus) values('8', '8', '1')
-
-INSERT INTO MesaTrabajoEncantamiento(idParche, idTesoro, estatus) values('9', '9', '1')
-
-INSERT INTO MesaTrabajoEncantamiento(idParche, idTesoro, estatus) values('10', '10', '1')
-
-
---MesaTrabajoJugador
-INSERT INTO MesaTrabajoJugador(idTemplo, idEstadistica, estatus) values('1', '1', '1')
-
-INSERT INTO MesaTrabajoJugador(idTemplo, idEstadistica, estatus) values('2', '2', '1')
-
-INSERT INTO MesaTrabajoJugador(idTemplo, idEstadistica, estatus) values('3', '3', '1')
-
-INSERT INTO MesaTrabajoJugador(idTemplo, idEstadistica, estatus) values('4', '4', '1')
-
-INSERT INTO MesaTrabajoJugador(idTemplo, idEstadistica, estatus) values('5', '5', '1')
-
-INSERT INTO MesaTrabajoJugador(idTemplo, idEstadistica, estatus) values('6', '6', '1')
-
-INSERT INTO MesaTrabajoJugador(idTemplo, idEstadistica, estatus) values('7', '7', '1')
-
-INSERT INTO MesaTrabajoJugador(idTemplo, idEstadistica, estatus) values('8', '8', '1')
-
-INSERT INTO MesaTrabajoJugador(idTemplo, idEstadistica, estatus) values('9', '9', '1')
-
-INSERT INTO MesaTrabajoJugador(idTemplo, idEstadistica, estatus) values('10', '10', '1')
-
-
---Amigo
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Animal
-SELECT *FROM Animal
-UPDATE Animal SET nombre = 'Animal1.0' WHERE idAnimal = 1
-
-SELECT *FROM Animal
-DELETE FROM Animal WHERE idAnimal = 1
-
-SELECT *FROM Animal
-
---Arma
-SELECT *FROM Arma
-UPDATE Arma SET numer = '2' WHERE idArma = 1
-
-SELECT *FROM Arma
-DELETE FROM Arma WHERE idArma = 1
-
-SELECT *FROM Arma
-
---Armadura
-SELECT *FROM Armadura
-UPDATE Armadura SET nombre = 'Armadura1.0' WHERE idArmadura = 1
-
-SELECT *FROM Armadura
-DELETE FROM Armadura WHERE idArmadura = 1
-
-SELECT *FROM Armadura
-
---Bloque
-SELECT *FROM Bloque
-UPDATE Bloque SET fecha = '2/12/2002' WHERE idBloque = 1
-
-SELECT *FROM Bloque
-DELETE FROM Bloque WHERE idBloque = 1
-
-SELECT *FROM Bloque
-
---Chat
-SELECT *FROM Chat
-UPDATE Chat SET nombre = 'Amigo1.0' WHERE idChat = 1
-
-SELECT *FROM Chat
-DELETE FROM Chat WHERE idChat = 1
-
-SELECT *FROM Chat
-
---Chunk
-SELECT *FROM Chunk
-UPDATE Chunk SET cantidad = '2' WHERE idChunk = 1
-
-SELECT *FROM Chunk
-DELETE FROM Chunk WHERE idChunk = 1
-
-SELECT *FROM Chunk
-
---Comida
-SELECT *FROM Comida
-UPDATE Comida SET cantidad = '2' WHERE idComida = 1
-
-SELECT *FROM Comida
-DELETE FROM Comida WHERE idComida = 1
-
-SELECT *FROM Comida
-
---Comercio
-SELECT *FROM Comercio
-UPDATE Comercio SET nombre = 'nombre1-0' WHERE idComercio = 1
-
-SELECT *FROM Comercio
-DELETE FROM Comercio WHERE idComercio = 1
-
-SELECT *FROM Comercio
-
---ConfigMundo
-SELECT *FROM ConfigMundo
-UPDATE ConfigMundo SET nombre = 'ConfigMundo1.0' WHERE idConfigMundo = 1
-
-SELECT *FROM ConfigMundo
-DELETE FROM ConfigMundo WHERE idConfigMundo = 1
-
-SELECT *FROM ConfigMundo
-
---ConfigUsuario
-SELECT *FROM ConfigUsuario
-UPDATE ConfigUsuario SET nombre = 'nombre1.0' WHERE idConfigUsuario = 1
-
-SELECT *FROM ConfigUsuario
-DELETE FROM ConfigUsuario WHERE idConfigUsuario = 1
-
-SELECT *FROM ConfigUsuario
-
---Coordenada
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Crafteo
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Cultivo
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Dimension
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Ecosistema
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Efectoes
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Encantamiento
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Estadistica
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Estructura
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Evento
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Fluido
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Fortaleza
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Generacion
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Herramienta
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Inventarios
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Item
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Jefe
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Jugador
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Logro
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Mascota
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Menu
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Moviliario
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Mob
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Modd
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---ModoJuego
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---ModoServidor
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Mundo
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Sonido
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---PackRecursoes
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---PackTextura
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Parche
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Pesca
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Plugin
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Pocion
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Servidor
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Templo
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Stack
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
---Tesoro
-SELECT *FROM Amigo
-UPDATE Amigo SET nombre = 'Amigo1.0' WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-DELETE FROM Amigo WHERE idAmigo = 1
-
-SELECT *FROM Amigo
-
+INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferencia, semilla, tipo) values (1,'creativo', 'nulo','Mapa inicial', 333, 'Super plano');
+INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferencia, semilla, tipo) values (2,'Supervivencia', 'Normal','Cofre de bonificación', 6151, 'Clasico');
+INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferencia, semilla, tipo) values (3,'Superviviencia', 'Dificil','Cofre de bonificacion', 15265, 'Sky Block');
+INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferencia, semilla, tipo) values (4,'creativo', 'nulo', 'Mapan inicial',65131, 'Clasico');
+INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferencia, semilla, tipo) values (5,'Aventura', 'Normal','Mapa inicial', 416545, 'Clasico');
+INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferencia, semilla, tipo) values (6,'creativo', 'nulo','nulo',4424, 'Clasico');
+INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferencia, semilla, tipo) values (7,'Aventura', 'Normal','nulo',65545, 'Sky Block');
+INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferencia, semilla, tipo) values (8,'Extremo', 'Dificil','nulo', 4354, 'Clasico');
+INSERT INTO ConfigMundo(idConfigMundo,modoJuego, dificultad,preferencia, semilla, tipo) values (9,'Extremo', 'Normal', 'nulo',15289, 'Clasico');
+
+#COnfigUsuario
+INSERT INTO ConfigUsuario(idConfigUsuario,gamertag, idioma) values (1,'barbiqiu', 'español');
+INSERT INTO ConfigUsuario(idConfigUsuario,gamertag, idioma) values (2,'AxRadiel', 'inglés');
+INSERT INTO ConfigUsuario(idConfigUsuario,gamertag, idioma) values (3,'Rinoxd', 'español');
+INSERT INTO ConfigUsuario(idConfigUsuario,gamertag, idioma) values (4,'Aguilablanca', 'español');
+INSERT INTO ConfigUsuario(idConfigUsuario,gamertag, idioma) values (5,'Kev0ti', 'inglés');
+INSERT INTO ConfigUsuario(idConfigUsuario,gamertag, idioma) values (6,'taquito32', 'inglés');
+INSERT INTO ConfigUsuario(idConfigUsuario,gamertag, idioma) values (7,'Camenio', 'inglés');
+INSERT INTO ConfigUsuario(idConfigUsuario,gamertag, idioma) values (8,'patoasado2', 'español');
+INSERT INTO ConfigUsuario(idConfigUsuario,gamertag, idioma) values (9,'frurro54', 'español');
+INSERT INTO ConfigUsuario(idConfigUsuario,gamertag, idioma) values (10,'paco63', 'inglés');
+
+#Cordenada
+INSERT INTO Coordenada(idCoordenada,ejeX, ejeY,ejeZ) values (1,0293838, 134085, 33);
+INSERT INTO Coordenada(idCoordenada,ejeX, ejeY,ejeZ) values (2,5456372, 0039499200, 2284);
+INSERT INTO Coordenada(idCoordenada,ejeX, ejeY,ejeZ) values (3,0293838, 134085, 19);
+INSERT INTO Coordenada(idCoordenada,ejeX, ejeY,ejeZ) values (4,0293838, 134085, 0031);
+INSERT INTO Coordenada(idCoordenada,ejeX, ejeY,ejeZ) values (5,0293838, 134085, -34);
+INSERT INTO Coordenada(idCoordenada,ejeX, ejeY,ejeZ) values (6,-994884, 431662, 11);
+INSERT INTO Coordenada(idCoordenada,ejeX, ejeY,ejeZ) values (7,0293838, 134085, -322);
+INSERT INTO Coordenada(idCoordenada,ejeX, ejeY,ejeZ) values (8,-0004789239, 47823, 33);
+INSERT INTO Coordenada(idCoordenada,ejeX, ejeY,ejeZ) values (9,988492911, 134085, -44736);
+INSERT INTO Coordenada(idCoordenada,ejeX, ejeY,ejeZ) values (10,09953932, 498937, 0029394);
+
+#Cultivo
+INSERT INTO Cultivo(idCultivo,tiempoCultivo, tipo) values (1,'00:03', 'planta zanahoria');
+INSERT INTO Cultivo(idCultivo,tiempoCultivo, tipo) values (2,'00:10', 'planta bambú');
+INSERT INTO Cultivo(idCultivo,tiempoCultivo, tipo) values (3,'00:5', 'planta trigo');
+INSERT INTO Cultivo(idCultivo,tiempoCultivo, tipo) values (4,'00:03', 'planta papa');
+INSERT INTO Cultivo(idCultivo,tiempoCultivo, tipo) values (5,'00:5', 'planta rabano');
+INSERT INTO Cultivo(idCultivo,tiempoCultivo, tipo) values (6,'00:5', 'planta caña');
+INSERT INTO Cultivo(idCultivo,tiempoCultivo, tipo) values (7,'00:10', 'planta calabaza');
+INSERT INTO Cultivo(idCultivo,tiempoCultivo, tipo) values (8,'00:15', 'planta sandia');
+INSERT INTO Cultivo(idCultivo,tiempoCultivo, tipo) values (9,'00:10', 'arbol de abeto');
+INSERT INTO Cultivo(idCultivo,tiempoCultivo, tipo) values (10,'00:15', 'arbol de jungla');
+
+#Dimension
+INSERT INTO DImension(idDImension,nombre, estilo, cicloDelDia) values (1,'Overworld','normal', 'Dia,Noche');
+INSERT INTO DImension(idDImension,nombre, estilo, cicloDelDia) values (2,'Overworld','normal', 'Dia');
+INSERT INTO DImension(idDImension,nombre, estilo, cicloDelDia) values (3,'Nether','Infierno', 'Noche');
+INSERT INTO DImension(idDImension,nombre, estilo, cicloDelDia) values (4,'Nether','Infierno', 'sin datos');
+INSERT INTO DImension(idDImension,nombre, estilo, cicloDelDia) values (5,'End','Fin', 'Noche');
+INSERT INTO DImension(idDImension,nombre, estilo, cicloDelDia) values (6,'End','normal', 'Noche');
+INSERT INTO DImension(idDImension,nombre, estilo, cicloDelDia) values (7,'End','Ciudad', 'Noche');
+INSERT INTO DImension(idDImension,nombre, estilo, cicloDelDia) values (8,'Overworld','Desertico', 'Dia');
+INSERT INTO DImension(idDImension,nombre, estilo, cicloDelDia) values (9,'Overworld','normal', 'Dia,Noche');
+INSERT INTO DImension(idDImension,nombre, estilo, cicloDelDia) values (10,'Nether','Infierno', 'Noche');
+
+#Ecosistema
+INSERT INTO Ecosistema(idEcosistema, tipo, tamaño, bioma, clima) values (1,'Desertico', 1540, 'Desierto', "Calido");
+INSERT INTO Ecosistema(idEcosistema, tipo, tamaño, bioma, clima) values (2,'Boscoso', 55, 'Bosque', "Frio");
+INSERT INTO Ecosistema(idEcosistema, tipo, tamaño, bioma, clima) values (3,'Boscoso', 51212, 'Jungla', "Humedo");
+INSERT INTO Ecosistema(idEcosistema, tipo, tamaño, bioma, clima) values (4,'Desertico', 421, 'Desierto', "Frio");
+INSERT INTO Ecosistema(idEcosistema, tipo, tamaño, bioma, clima) values (5,'Boscoso', 415, 'Bosque', "Calido");
+INSERT INTO Ecosistema(idEcosistema, tipo, tamaño, bioma, clima) values (6,'Nevado', 4551, 'Tundra', "Frio");
+INSERT INTO Ecosistema(idEcosistema, tipo, tamaño, bioma, clima) values (7,'Boscoso', 53152, 'Bosque', "Humedo");
+INSERT INTO Ecosistema(idEcosistema, tipo, tamaño, bioma, clima) values (8,'Boscosos', 56532, 'Bosque', "Humedo");
+INSERT INTO Ecosistema(idEcosistema, tipo, tamaño, bioma, clima) values (9,'Desertico', 53, 'Desierto', "Calido");
+INSERT INTO Ecosistema(idEcosistema, tipo, tamaño, bioma, clima) values (10,'Desertico', 5345, 'Desierto', "Frio");
+
+#Efecto
+INSERT INTO Efecto(idEfecto,tipo, durabilidad, nombre) values (1,'Daño', 50,  'Pocion de daño');
+INSERT INTO Efecto(idEfecto,tipo, durabilidad, nombre) values (2,'Resistencia contra el fuego', 100, 'Pocion de resistencia contra el fuego');
+INSERT INTO Efecto(idEfecto,tipo, durabilidad, nombre) values (3 ,'Daño', 45,  'Pocion de lanzamiento de daño');
+INSERT INTO Efecto(idEfecto,tipo, durabilidad, nombre) values (4,'Salto', 559, ' Pocion de super salto');
+INSERT INTO Efecto(idEfecto,tipo, durabilidad, nombre) values (5 ,'Invisibilidad', 50,  'Pocion de invisibilidad');
+INSERT INTO Efecto(idEfecto,tipo, durabilidad, nombre) values (6,'Daño', 50,  'Veneno');
+INSERT INTO Efecto(idEfecto,tipo, durabilidad, nombre) values (7,'curacion', 50, 'curacion instantanea');
+INSERT INTO Efecto(idEfecto,tipo, durabilidad, nombre) values (8,'respirar debajo del agua', 50,  'vida marina');
+INSERT INTO Efecto(idEfecto,tipo, durabilidad, nombre) values (9,'Daño', 50,  'Pocion de daño');
+INSERT INTO Efecto(idEfecto,tipo, durabilidad, nombre) values (10,'Salto', 50,  'Super salto');
+
+
+#Encantamiento
+INSERT INTO Encantamiento (idEncantamiento,tipo, durabilidad, nombre) values(1,'construccion', 50, 'toque de seda');
+INSERT INTO Encantamiento (idEncantamiento,tipo, durabilidad, nombre) values(2,'daño', 50, 'filo');
+INSERT INTO Encantamiento (idEncantamiento,tipo, durabilidad, nombre) values(3,'defensa', 50, 'irrompibilidad');
+INSERT INTO Encantamiento (idEncantamiento,tipo, durabilidad, nombre) values(4,'construccion', 50, 'fortuna');
+INSERT INTO Encantamiento (idEncantamiento,tipo, durabilidad, nombre) values(5,'daño', 50, 'saqueo');
+INSERT INTO Encantamiento (idEncantamiento,tipo, durabilidad, nombre) values(6,'daño', 50, 'perdicion para los artropodos');
+INSERT INTO Encantamiento (idEncantamiento,tipo, durabilidad, nombre) values(7,'defensa', 50, 'caida de pluma');
+INSERT INTO Encantamiento (idEncantamiento,tipo, durabilidad, nombre) values(8,'daño', 50, 'fuego');
+INSERT INTO Encantamiento (idEncantamiento,tipo, durabilidad, nombre) values(9,'construccion', 50, 'reparacion');
+INSERT INTO Encantamiento (idEncantamiento,tipo, durabilidad, nombre) values(10,'defensa', 50, 'reparacion');
+
+#Estadistica
+
+INSERT INTO Estadistica(idEstadistica,dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (1,2, 5, 4, 5, 6);
+INSERT INTO Estadistica(idEstadistica,dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (2,2, 5, 4, 5, 6);
+INSERT INTO Estadistica(idEstadistica,dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (3,2, 5, 4, 5, 6);
+INSERT INTO Estadistica(idEstadistica,dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (4,2, 5, 4, 5, 6);
+INSERT INTO Estadistica(idEstadistica,dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (5,2, 5, 4, 5, 6);
+INSERT INTO Estadistica(idEstadistica,dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (6,2, 5, 4, 5, 6);
+INSERT INTO Estadistica(idEstadistica,dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (7,2, 5, 4, 5, 6);
+INSERT INTO Estadistica(idEstadistica,dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (8,2, 5, 4, 5, 6);
+INSERT INTO Estadistica(idEstadistica,dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (9,2, 5, 4, 5, 6);
+INSERT INTO Estadistica(idEstadistica,dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (10,2, 5, 4, 5, 6);
+
+#Estructura
+INSERT INTO Estructura(idEstructura, tipo, estilo) values (1,'desierto', 'piramide');
+INSERT INTO Estructura(idEstructura, tipo, estilo) values (2,'jungla', 'templo');
+INSERT INTO Estructura(idEstructura, tipo, estilo) values (3,'desierto', 'aldea');
+INSERT INTO Estructura(idEstructura, tipo, estilo) values (4,'bosque', 'casa de villagers');
+INSERT INTO Estructura(idEstructura, tipo, estilo) values (5,'jungla', 'aldea');
+INSERT INTO Estructura(idEstructura, tipo, estilo) values (6,'bosque', 'aldea de saqueadores');
+INSERT INTO Estructura(idEstructura, tipo, estilo) values (7,'desierto', 'piramide');
+INSERT INTO Estructura(idEstructura, tipo, estilo) values (8,'tundra', 'igloo');
+INSERT INTO Estructura(idEstructura, tipo, estilo) values (9,'desierto', 'piramide');
+INSERT INTO Estructura(idEstructura, tipo, estilo) values (10,'desierto', 'piramide');
+
+#Evento
+INSERT INTO Evento(idEvento,tipo, fechaInicio, fechaCierre, duarbilidad) values (1,'juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4);
+INSERT INTO Evento(idEvento,tipo, fechaInicio, fechaCierre, duarbilidad) values (4,'juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4);
+INSERT INTO Evento(idEvento,tipo, fechaInicio, fechaCierre, duarbilidad) values (5,'juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4);
+INSERT INTO Evento(idEvento,tipo, fechaInicio, fechaCierre, duarbilidad) values (6,'juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4);
+INSERT INTO Evento(idEvento,tipo, fechaInicio, fechaCierre, duarbilidad) values (7,'juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4);
+INSERT INTO Evento(idEvento,tipo, fechaInicio, fechaCierre, duarbilidad) values (8,'juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4);
+INSERT INTO Evento(idEvento,tipo, fechaInicio, fechaCierre, duarbilidad) values (9,'juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4);
+INSERT INTO Evento(idEvento,tipo, fechaInicio, fechaCierre, duarbilidad) values (10,'juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4);
+
+#Fluido
+INSERT INTO Fluido(idFluido,tipo, nombre, nivelFluido) values (1,'frio', 'agua', 3);
+INSERT INTO Fluido(idFluido,tipo, nombre, nivelFluido) values (2,'caliente', 'lava', 1);
+INSERT INTO Fluido(idFluido,tipo, nombre, nivelFluido) values (3,'caliente', 'agua', 3);
+INSERT INTO Fluido(idFluido,tipo, nombre, nivelFluido) values (4,'frio', 'nieve', 0);
+INSERT INTO Fluido(idFluido,tipo, nombre, nivelFluido) values (5,'frio', 'agua', 3);
+INSERT INTO Fluido(idFluido,tipo, nombre, nivelFluido) values (6,'caliente', 'lava', 1);
+INSERT INTO Fluido(idFluido,tipo, nombre, nivelFluido) values (7,'caliente', 'agua', 3);
+INSERT INTO Fluido(idFluido,tipo, nombre, nivelFluido) values (8,'frio', 'nieve', 0);
+INSERT INTO Fluido(idFluido,tipo, nombre, nivelFluido) values (9,'frio', 'agua', 3);
+INSERT INTO Fluido(idFluido,tipo, nombre, nivelFluido) values (10,'frio', 'agua', 3);
+
+#Fortaleza
+INSERT INTO Fortaleza(idFortaleza,botin, nombre, estilo) values (1,'oro', 'piramide', 'desierto');
+INSERT INTO Fortaleza(idFortaleza,botin, nombre, estilo) values (2,'oro', 'templo', 'jungla');
+INSERT INTO Fortaleza(idFortaleza,botin, nombre, estilo) values (3,'oro', 'fortaleza del netther', 'nether');
+INSERT INTO Fortaleza(idFortaleza,botin, nombre, estilo) values (4,'hierro', 'Ender', 'cueva');
+INSERT INTO Fortaleza(idFortaleza,botin, nombre, estilo) values (5,'hierro', 'casa de los villager', 'bosque');
+INSERT INTO Fortaleza(idFortaleza,botin, nombre, estilo) values (6,'oro', 'piramide', 'desierto');
+INSERT INTO Fortaleza(idFortaleza,botin, nombre, estilo) values (7,'oro', 'templo', 'jungla');
+INSERT INTO Fortaleza(idFortaleza,botin, nombre, estilo) values (8,'oro', 'fortaleza del netther', 'nether');
+INSERT INTO Fortaleza(idFortaleza,botin, nombre, estilo) values (9,'hierro', 'Ender', 'cueva');
+INSERT INTO Fortaleza(idFortaleza,botin, nombre, estilo) values (10,'hierro', 'casa de los villager', 'bosque');
+
+#Generación
+INSERT INTO Generacion(idGeneracion,tipo, lugarGeneracion) values (1,'Mundo', 'General');
+INSERT INTO Generacion(idGeneracion,tipo, lugarGeneracion) values (2,'Jugador', 'bosque');
+INSERT INTO Generacion(idGeneracion,tipo, lugarGeneracion) values (3,'Vaca', 'bosque');
+INSERT INTO Generacion(idGeneracion,tipo, lugarGeneracion) values (4,'Conejo', 'desierto');
+INSERT INTO Generacion(idGeneracion,tipo, lugarGeneracion) values (5,'gato', 'aldea');
+INSERT INTO Generacion(idGeneracion,tipo, lugarGeneracion) values (6,'zombie', 'desierto');
+INSERT INTO Generacion(idGeneracion,tipo, lugarGeneracion) values (7,'creeper', 'tundra');
+INSERT INTO Generacion(idGeneracion,tipo, lugarGeneracion) values (8,'cabra', 'tundra');
+INSERT INTO Generacion(idGeneracion,tipo, lugarGeneracion) values (9,'panda', 'bosque de bambus');
+INSERT INTO Generacion(idGeneracion,tipo, lugarGeneracion) values (10,'abeja', 'bosque');
+
+#Herramienta
+INSERT INTO Herramienta(idHerramienta,material, nombre, resistencia, tipo) values (1,'hierro', 'pala', 4, 'trabajo');
+INSERT INTO Herramienta(idHerramienta,material, nombre, resistencia, tipo) values (2,'hierro', 'pala', 4, 'trabajo');
+INSERT INTO Herramienta(idHerramienta,material, nombre, resistencia, tipo) values (3,'hierro', 'pala', 4, 'trabajo');
+INSERT INTO Herramienta(idHerramienta,material, nombre, resistencia, tipo) values (4,'hierro', 'pala', 4, 'trabajo');
+INSERT INTO Herramienta(idHerramienta,material, nombre, resistencia, tipo) values (5,'hierro', 'pala', 4, 'trabajo');
+INSERT INTO Herramienta(idHerramienta,material, nombre, resistencia, tipo) values (6,'hierro', 'pala', 4, 'trabajo');
+INSERT INTO Herramienta(idHerramienta,material, nombre, resistencia, tipo) values (7,'hierro', 'pala', 4, 'trabajo');
+INSERT INTO Herramienta(idHerramienta,material, nombre, resistencia, tipo) values (8,'hierro', 'pala', 4, 'trabajo');
+INSERT INTO Herramienta(idHerramienta,material, nombre, resistencia, tipo) values (9,'hierro', 'pala', 4, 'trabajo');
+INSERT INTO Herramienta(idHerramienta,material, nombre, resistencia, tipo) values (10,'hierro', 'pala', 4, 'trabajo');
+
+#Inventario
+INSERT INTO Inventario(idInventario,espacio) values (1,25);
+INSERT INTO Inventario(idInventario,espacio) values (2,5);
+INSERT INTO Inventario(idInventario,espacio) values (3,10);
+INSERT INTO Inventario(idInventario,espacio) values (4,15);
+INSERT INTO Inventario(idInventario,espacio) values (5,16);
+INSERT INTO Inventario(idInventario,espacio) values (6,22);
+INSERT INTO Inventario(idInventario,espacio) values (7,13);
+INSERT INTO Inventario(idInventario,espacio) values (8,11);
+INSERT INTO Inventario(idInventario,espacio) values (9,3);
+INSERT INTO Inventario(idInventario,espacio) values (10,5);
+
+#Item
+INSERT INTO Item(idItem,tipo, nombre) values (1,'construccion', 'piedra');
+INSERT INTO Item(idItem,tipo, nombre) values (2,'comida', 'zanahoria');
+INSERT INTO Item(idItem,tipo, nombre) values (3,'defensa', 'escudo');
+INSERT INTO Item(idItem,tipo, nombre) values (4,'ataque', 'espada');
+INSERT INTO Item(idItem,tipo, nombre) values (5,'construccion', 'ladrillos');
+INSERT INTO Item(idItem,tipo, nombre) values (6,'construccion', 'madera');
+INSERT INTO Item(idItem,tipo, nombre) values (7,'comida', 'papa');
+INSERT INTO Item(idItem,tipo, nombre) values (8,'mecanismo', 'piedra rojiza');
+INSERT INTO Item(idItem,tipo, nombre) values (9,'musica', 'bloque musical');
+INSERT INTO Item(idItem,tipo, nombre) values (10,'construccion', 'diorita');
+
+#Jefe
+INSERT INTO Jefe(idJefe,dimension, habilidad, puntosVida, nombre) values (1, 'nether', 'daño', 3, 'gosth');
+INSERT INTO Jefe(idJefe,dimension, habilidad, puntosVida, nombre) values (2, 'ender', 'daño', 5, 'dragon');
+INSERT INTO Jefe(idJefe,dimension, habilidad, puntosVida, nombre) values (3, 'overworld', 'daño', 8, 'wither');
+INSERT INTO Jefe(idJefe,dimension, habilidad, puntosVida, nombre) values (4, 'nether', 'daño', 8, 'wither');
+INSERT INTO Jefe(idJefe,dimension, habilidad, puntosVida, nombre) values (5, 'ender', 'daño', 6, 'wither');
+INSERT INTO Jefe(idJefe,dimension, habilidad, puntosVida, nombre) values (6, 'nether', 'daño', 3, 'gosth');
+INSERT INTO Jefe(idJefe,dimension, habilidad, puntosVida, nombre) values (7, 'ender', 'daño', 5, 'dragon');
+INSERT INTO Jefe(idJefe,dimension, habilidad, puntosVida, nombre) values (8, 'overworld', 'daño', 8, 'wither');
+INSERT INTO Jefe(idJefe,dimension, habilidad, puntosVida, nombre) values (9, 'nether', 'daño', 8, 'wither');
+INSERT INTO Jefe(idJefe,dimension, habilidad, puntosVida, nombre) values (10, 'ender', 'daño', 6, 'wither');
