@@ -57,7 +57,7 @@ CREATE TABLE Arma
 	tipoArma varchar(50) not null,
 	nombre varchar(50) not null,
 	material varchar(50) not null,
-	daño int not null,
+	daÃ±o int not null,
 	resistencia int not null,
 	estatus bit default 1 not null
 );
@@ -187,7 +187,7 @@ CREATE TABLE Ecosistema
 (
 	idEcosistema int identity(1,1),
 	tipo varchar(50) not null,
-	tamaño int not null,
+	tamaÃ±o int not null,
 	bioma varchar(50) not null,
 	clima varchar(50) not null,
 	estatus bit default 1 not null
@@ -382,7 +382,7 @@ CREATE TABLE Mob
 	habilidad varchar(50) not null,
 	tipo varchar(50) not null,
 	nombre varchar(50) not null,
-	puntosDaño int not null,
+	puntosDaÃ±o int not null,
 	estatus bit default 1 not null
 );
 GO
@@ -489,7 +489,7 @@ CREATE TABLE Pocion
 	idPocion int identity(1,1),
 	nombre varchar(50) not null,
 	tipo varchar(50) not null,
-	puntosDaño int not null,
+	puntosDaÃ±o int not null,
 	puntosVida int not null,
 	estatus bit default 1 not null
 );
