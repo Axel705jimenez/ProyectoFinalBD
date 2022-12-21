@@ -97,7 +97,7 @@ CREATE TABLE Chunk
 (
 	idChunk int identity(1,1),
 	limite int not null,
-	formato varchar not null,
+	formato varchar (50)not null,
 	estatus bit default 1 not null
 );
 GO
@@ -114,7 +114,7 @@ GO
 CREATE TABLE Comida
 (
 	idComida int identity(1,1),
-	tipo varchar not null,
+	tipo varchar(50) not null,
 	valorNutrimental int not null,
 	nombre varchar(50) not null,
 	ingredientes varchar(50) not null,
@@ -129,7 +129,7 @@ CREATE TABLE ConfigMundo
 	dificultad varchar(50) not null,
 	preferencia varchar(50) not null,
 	semilla varchar(50) not null,
-	tipo int not null,
+	tipo varchar(50) not null,
 	estatus bit default 1 not null
 );
 GO
@@ -230,7 +230,7 @@ CREATE TABLE Estructura
 (
 	idEstructura int identity(1,1),
 	tipo varchar(50) not null,
-	estilo varchar not null,
+	estilo varchar(50) not null,
 	estatus bit default 1 not null
 );
 GO
@@ -249,7 +249,7 @@ GO
 CREATE TABLE Fluido
 (
 	idFluido int identity(1,1),
-	tipo int not null,
+	tipo varchar(50) not null,
 	nombre varchar(50)not null,
 	nivelFluido int not null,
 	estatus bit default 1 not null
@@ -259,9 +259,9 @@ GO
 CREATE TABLE Fortaleza
 (
 	idFortaleza int identity(1,1),
-	botin datetime not null,
+	botin varchar(50) not null,
 	nombre varchar(50) not null,
-	estilo int not null,
+	estilo varchar(50) not null,
 	estatus bit default 1 not null
 );
 GO
@@ -269,7 +269,7 @@ GO
 CREATE TABLE Generacion
 (
 	idGeneracion int identity(1,1),
-	tipo datetime not null,
+	tipo varchar(50) not null,
 	lugarGeneracion varchar(50) not null,
 	estatus bit default 1 not null
 );
@@ -349,9 +349,9 @@ CREATE TABLE Mascota
 (
 	idMascota int identity(1,1),
 	nombre varchar(50) not null,
-	tipo int not null,
+	tipo varchar(50) not null,
 	puntosVida int not null,
-	comida int not null,
+	comida varchar(50) not null,
 	idJugador int not null,
 	estatus bit default 1 not null
 );
@@ -380,7 +380,6 @@ CREATE TABLE Mob
 	puntosVida int not null,
 	botin varchar(50) not null,
 	habilidad varchar(50) not null,
-	tipo varchar(50) not null,
 	nombre varchar(50) not null,
 	puntosDaño int not null,
 	estatus bit default 1 not null
@@ -392,7 +391,6 @@ CREATE TABLE Modd
 	idModd int identity(1,1),
 	nombre varchar(50) not null,
 	versionMod int not null,
-	formato varchar(50) not null,
 	estatus bit default 1 not null
 );
 GO
@@ -410,7 +408,7 @@ GO
 CREATE TABLE ModoServidor
 (
 	idModoServidor int identity(1,1),
-	tipo int not null,
+	tipo varchar(50) not null,
 	estatus bit default 1 not null
 );
 GO
@@ -459,7 +457,6 @@ CREATE TABLE Parche
 (
 	idParche int identity(1,1),
 	versioParche int not null,
-	formato varchar(50) not null,
 	fechaActualizacion datetime not null,
 	estatus bit default 1 not null
 );
@@ -529,8 +526,8 @@ GO
 CREATE TABLE Tesoro
 (
 	idTesoro int identity(1,1),
-	tipo datetime not null,
-	botin varchar(30) not null,
+	tipo varchar(50) not null,
+	botin varchar(50) not null,
 	estatus bit default 1 not null
 );
 
@@ -732,7 +729,14 @@ CREATE TABLE MundoTemplo
 	estatus bit default 1 not null,
 );
 GO
-
+CREATE TABLE ServidorModoServidor
+(
+	idServidorModoServidor int identity(1,1),
+	idServidor int not null,
+	idModoServidor int not null,
+	estatus bit default 1 not null,
+);
+GO
 
 
 --Llaves primarias
@@ -936,7 +940,10 @@ ALTER TABLE MundoTemplo ADD CONSTRAINT FK_MundoTemploMundo FOREIGN KEY (idMundo)
 Mundo(idMundo)
 ALTER TABLE MundoTemplo ADD CONSTRAINT FK_MundoTemploTemplo FOREIGN KEY (idTemplo) REFERENCES 
 Templo(idTemplo)
-
+ALTER TABLE ServidorModoServidor ADD CONSTRAINT FK_ServidorModoServidorServidor FOREIGN KEY (idServidor) REFERENCES 
+Servidor(idServidor)
+ALTER TABLE ServidorModoServidor ADD CONSTRAINT FK_ServidorModoServidorModoServidor FOREIGN KEY (idModoServidor) REFERENCES 
+ModoServidor(idModoServidor)
 
 --Index
 CREATE INDEX IX_Aldea ON Aldea(idAldea)
@@ -1033,13 +1040,6 @@ GO
 INSERT INTO Amigo(gamertag, aspecto) values ('Yusiniu', 'Personalizado')
 GO
 
-SELECT *FROM Aldea
-UPDATE Aldea SET estilo = 'Desierto' WHERE idAldea = 1
-GO
-SELECT *FROM Aldea
-DELETE FROM Aldea WHERE idAldea = 1
-GO
-SELECT *FROM Aldea
 
 --Animal
 INSERT INTO Animal(puntosVida, botin, tipoAnimal) values (4, 'Cuero', 'Vaca')
@@ -1131,3 +1131,1473 @@ INSERT INTO Chat(fuente, color, espaciadoLinea) values ('Arial Narrow', 'Azul', 
 GO
 
 
+--chunk
+INSERT INTO Chunk(limite, formato) values (32,'PNG')
+GO
+INSERT INTO Chunk(limite, formato) values (15,'AVI')
+GO
+INSERT INTO Chunk(limite, formato) values (5,'MP3')
+GO
+INSERT INTO Chunk(limite, formato) values (7,'PNG')
+GO
+INSERT INTO Chunk(limite, formato) values (8,'PNG')
+GO
+INSERT INTO Chunk(limite, formato) values (5,'AVI')
+GO
+INSERT INTO Chunk(limite, formato) values (16,'IFF')
+GO
+INSERT INTO Chunk(limite, formato) values (28,'IFF')
+GO
+INSERT INTO Chunk(limite, formato) values (30,'MP3')
+
+GO
+INSERT INTO Chunk(limite, formato) values (31,'PNG')
+GO
+
+--Comercio
+INSERT INTO Comercio(tipoComercio, tipoIntercambio) values ('Vendedor ambulante', 'Zanahoria')
+GO
+INSERT INTO Comercio(tipoComercio, tipoIntercambio) values ('Cartografo', 'Esemeralda')
+GO
+INSERT INTO Comercio(tipoComercio, tipoIntercambio) values ('Herrero', 'Lingote de hierro')
+GO
+INSERT INTO Comercio(tipoComercio, tipoIntercambio) values ('Carnicero', 'Esmeralda')
+GO
+INSERT INTO Comercio(tipoComercio, tipoIntercambio) values ('Granjero', 'Semillas de trigo')
+GO
+INSERT INTO Comercio(tipoComercio, tipoIntercambio) values (',Bibliotecario', 'Cuero')
+GO
+INSERT INTO Comercio(tipoComercio, tipoIntercambio) values ('Carnicero', 'Esmeralda')
+GO
+INSERT INTO Comercio(tipoComercio, tipoIntercambio) values ('Cartografo', 'Lingote de hierro')
+GO
+INSERT INTO Comercio(tipoComercio, tipoIntercambio) values ('Vendedor ambulante', 'Lingote de oro')
+GO
+INSERT INTO Comercio(tipoComercio, tipoIntercambio) values ('Pescador', 'Esmeralda')
+GO
+
+--Comida
+INSERT INTO Comida(tipo, valorNutrimental, nombre, ingredientes) values ('carne', 3, 'Filete', 'Vaca')
+GO
+INSERT INTO Comida(tipo, valorNutrimental, nombre, ingredientes) values ('Vegetal', 0.5, 'Zanahoria','zanahoria')
+GO
+INSERT INTO Comida(tipo, valorNutrimental, nombre, ingredientes) values ('Postre', 6, 'Pastel', 'Huevos,Leche,trigo,Azucar')
+GO
+INSERT INTO Comida(tipo, valorNutrimental, nombre, ingredientes) values ('carne', 3, 'chuleta', 'Cerdo')
+GO
+INSERT INTO Comida(tipo, valorNutrimental, nombre, ingredientes) values ('Fruta', 0.5, 'Manzana', 'Manzana')
+GO
+INSERT INTO Comida(tipo, valorNutrimental, nombre, ingredientes) values ('Postre', 3, 'Pastel de calabaza', 'Azucar,huevo,calabaza')
+GO
+INSERT INTO Comida(tipo, valorNutrimental, nombre, ingredientes) values ('Pollo', 3, 'Pollo asado', 'Pollo')
+GO
+INSERT INTO Comida(tipo, valorNutrimental, nombre, ingredientes) values ('Carne', 3, 'Carne de conejo', 'Conejo')
+GO
+INSERT INTO Comida(tipo, valorNutrimental, nombre, ingredientes) values ('Sopa', 2, 'Sopa de chamiñon', 'Champiñon, plato')
+GO
+INSERT INTO Comida(tipo, valorNutrimental, nombre, ingredientes) values ('carne', 3, 'chuleta', 'Vaca')
+GO
+
+--ConfigMundo
+INSERT INTO ConfigMundo(modoJuego, dificultad,preferencia, semilla, tipo) values ('creativo', 'nulo','Mapa inicial', 333, 'Super plano')
+GO
+INSERT INTO ConfigMundo(modoJuego, dificultad,preferencia, semilla, tipo) values ('Supervivencia', 'Normal','Cofre de bonificación', 6151, 'Clasico')
+GO
+INSERT INTO ConfigMundo(modoJuego, dificultad,preferencia, semilla, tipo) values ('Superviviencia', 'Dificil','Cofre de bonificacion', 15265, 'Sky Block')
+GO
+INSERT INTO ConfigMundo(modoJuego, dificultad,preferencia, semilla, tipo) values ('creativo', 'nulo', 'Mapan inicial',65131, 'Clasico')
+GO
+INSERT INTO ConfigMundo(modoJuego, dificultad,preferencia, semilla, tipo) values ('Aventura', 'Normal','Mapa inicial', 416545, 'Clasico')
+GO
+INSERT INTO ConfigMundo(modoJuego, dificultad,preferencia, semilla, tipo) values ('creativo', 'nulo','nulo',4424, 'Clasico')
+GO
+INSERT INTO ConfigMundo(modoJuego, dificultad,preferencia, semilla, tipo) values ('Aventura', 'Normal','nulo',65545, 'Sky Block')
+GO
+INSERT INTO ConfigMundo(modoJuego, dificultad,preferencia, semilla, tipo) values ('Extremo', 'Dificil','nulo', 4354, 'Clasico')
+GO
+INSERT INTO ConfigMundo(modoJuego, dificultad,preferencia, semilla, tipo) values ('Extremo', 'Normal', 'nulo',15289, 'Clasico')
+GO
+INSERT INTO ConfigMundo(modoJuego, dificultad,preferencia, semilla, tipo) values ('Aventura', 'facil', 'mapa inicial',15154, 'Clasico')
+GO
+
+--COnfigUsuario
+INSERT INTO ConfigUsuario(gamertag, idioma) values ('barbiqiu', 'español')
+GO
+INSERT INTO ConfigUsuario(gamertag, idioma) values ('AxRadiel', 'inglés')
+GO
+INSERT INTO ConfigUsuario(gamertag, idioma) values ('Rinoxd', 'español')
+GO
+INSERT INTO ConfigUsuario(gamertag, idioma) values ('Aguilablanca', 'español')
+GO
+INSERT INTO ConfigUsuario(gamertag, idioma) values ('Kev0ti', 'inglés')
+GO
+INSERT INTO ConfigUsuario(gamertag, idioma) values ('taquito32', 'inglés')
+GO
+INSERT INTO ConfigUsuario(gamertag, idioma) values ('Camenio', 'inglés')
+GO
+INSERT INTO ConfigUsuario(gamertag, idioma) values ('patoasado2', 'español')
+GO
+INSERT INTO ConfigUsuario(gamertag, idioma) values ('frurro54', 'español')
+GO
+INSERT INTO ConfigUsuario(gamertag, idioma) values ('paco63', 'inglés')
+GO
+
+--Cordenada
+INSERT INTO Coordenada(ejeX, ejeY,ejeZ) values (0293838, 134085, 33)
+go
+INSERT INTO Coordenada(ejeX, ejeY,ejeZ) values (5456372, 0039499200, 2284)
+go
+INSERT INTO Coordenada(ejeX, ejeY,ejeZ) values (0293838, 134085, 19)
+go
+INSERT INTO Coordenada(ejeX, ejeY,ejeZ) values (0293838, 134085, 0031)
+go
+INSERT INTO Coordenada(ejeX, ejeY,ejeZ) values (0293838, 134085, -34)
+go
+INSERT INTO Coordenada(ejeX, ejeY,ejeZ) values (-994884, 431662, 11)
+go
+INSERT INTO Coordenada(ejeX, ejeY,ejeZ) values (0293838, 134085, -322)
+go
+INSERT INTO Coordenada(ejeX, ejeY,ejeZ) values (-0004789239, 47823, 33)
+go
+INSERT INTO Coordenada(ejeX, ejeY,ejeZ) values (988492911, 134085, -44736)
+go
+INSERT INTO Coordenada(ejeX, ejeY,ejeZ) values (09953932, 498937, 0029394)
+go
+
+--Cultivo
+INSERT INTO Cultivo(tiempoCultivo, tipo) values ('00:03', 'planta zanahoria')
+GO
+INSERT INTO Cultivo(tiempoCultivo, tipo) values ('00:10', 'planta bambú')
+GO
+INSERT INTO Cultivo(tiempoCultivo, tipo) values ('00:5', 'planta trigo')
+GO
+INSERT INTO Cultivo(tiempoCultivo, tipo) values ('00:03', 'planta papa')
+GO
+INSERT INTO Cultivo(tiempoCultivo, tipo) values ('00:5', 'planta rabano')
+GO
+INSERT INTO Cultivo(tiempoCultivo, tipo) values ('00:5', 'planta caña')
+GO
+INSERT INTO Cultivo(tiempoCultivo, tipo) values ('00:10', 'planta calabaza')
+GO
+INSERT INTO Cultivo(tiempoCultivo, tipo) values ('00:15', 'planta sandia')
+GO
+INSERT INTO Cultivo(tiempoCultivo, tipo) values ('00:10', 'arbol de abeto')
+GO
+INSERT INTO Cultivo(tiempoCultivo, tipo) values ('00:15', 'arbol de jungla')
+GO
+
+--Dimension
+INSERT INTO DImension(nombre, estilo, cicloDelDia) values ('Overworld','normal', 'Dia,Noche')
+GO
+INSERT INTO DImension(nombre, estilo, cicloDelDia) values ('Overworld','normal', 'Dia')
+GO
+INSERT INTO DImension(nombre, estilo, cicloDelDia) values ('Nether','Infierno', 'Noche')
+GO
+INSERT INTO DImension(nombre, estilo, cicloDelDia) values ('Nether','Infierno', 'sin datos')
+GO
+INSERT INTO DImension(nombre, estilo, cicloDelDia) values ('End','Fin', 'Noche')
+GO
+INSERT INTO DImension(nombre, estilo, cicloDelDia) values ('End','normal', 'Noche')
+GO
+INSERT INTO DImension(nombre, estilo, cicloDelDia) values ('End','Ciudad', 'Noche')
+GO
+INSERT INTO DImension(nombre, estilo, cicloDelDia) values ('Overworld','Desertico', 'Dia')
+GO
+INSERT INTO DImension(nombre, estilo, cicloDelDia) values ('Overworld','normal', 'Dia,Noche')
+GO
+INSERT INTO DImension(nombre, estilo, cicloDelDia) values ('Nether','Infierno', 'Noche')
+GO
+
+--Ecosistema
+INSERT INTO Ecosistema( tipo, tamaño, bioma, clima) values ('Desertico', 1540, 'Desierto', 'Calido')
+go
+INSERT INTO Ecosistema( tipo, tamaño, bioma, clima) values ('Boscoso', 55, 'Bosque', 'Frio')
+go
+INSERT INTO Ecosistema( tipo, tamaño, bioma, clima) values ('Boscoso', 51212, 'Jungla', 'Humedo')
+go
+INSERT INTO Ecosistema( tipo, tamaño, bioma, clima) values ('Desertico', 421, 'Desierto', 'Frio')
+go
+INSERT INTO Ecosistema( tipo, tamaño, bioma, clima) values ('Boscoso', 415, 'Bosque', 'Calido')
+go
+INSERT INTO Ecosistema( tipo, tamaño, bioma, clima) values ('Nevado', 4551, 'Tundra', 'Frio')
+go
+INSERT INTO Ecosistema( tipo, tamaño, bioma, clima) values ('Boscoso', 53152, 'Bosque', 'Humedo')
+go
+INSERT INTO Ecosistema( tipo, tamaño, bioma, clima) values ('Boscosos', 56532, 'Bosque', 'Humedo')
+go
+INSERT INTO Ecosistema( tipo, tamaño, bioma, clima) values ('Desertico', 53, 'Desierto', 'Calido')
+go
+INSERT INTO Ecosistema( tipo, tamaño, bioma, clima) values ('Desertico', 5345, 'Desierto', 'Frio')
+go
+
+--Efecto
+INSERT INTO Efecto(tipo, durabilidad, nombre) values ('Daño', 50,  'Pocion de daño')
+GO
+INSERT INTO Efecto(tipo, durabilidad, nombre) values ('Resistencia contra el fuego', 100, 'Pocion de resistencia contra el fuego')
+GO
+INSERT INTO Efecto(tipo, durabilidad, nombre) values ('Daño', 45,  'Pocion de lanzamiento de daño')
+GO
+INSERT INTO Efecto(tipo, durabilidad, nombre) values ('Salto', 559, ' Pocion de super salto')
+GO
+INSERT INTO Efecto(tipo, durabilidad, nombre) values ('Invisibilidad', 50,  'Pocion de invisibilidad')
+GO
+INSERT INTO Efecto(tipo, durabilidad, nombre) values ('Daño', 50,  'Veneno')
+GO
+INSERT INTO Efecto(tipo, durabilidad, nombre) values ('curacion', 50, 'curacion instantanea')
+GO
+INSERT INTO Efecto(tipo, durabilidad, nombre) values ('respirar debajo del agua', 50,  'vida marina')
+GO
+INSERT INTO Efecto(tipo, durabilidad, nombre) values ('Daño', 50,  'Pocion de daño')
+GO
+INSERT INTO Efecto(tipo, durabilidad, nombre) values ('Salto', 50,  'Super salto')
+GO
+
+
+--Encantamiento
+INSERT INTO Encantamiento (tipo, durabilidad, nombre) values('construccion', 50, 'toque de seda')
+GO
+INSERT INTO Encantamiento (tipo, durabilidad, nombre) values('daño', 50, 'filo')
+GO
+INSERT INTO Encantamiento (tipo,durabilidad, nombre) values('defensa', 50, 'irrompibilidad')
+GO
+INSERT INTO Encantamiento (tipo, durabilidad, nombre) values('construccion', 50, 'fortuna')
+GO
+INSERT INTO Encantamiento (tipo, durabilidad, nombre) values('daño', 50, 'saqueo')
+GO
+INSERT INTO Encantamiento (tipo, durabilidad, nombre) values('daño', 50, 'perdicion para los artropodos')
+GO
+INSERT INTO Encantamiento (tipo, durabilidad, nombre) values('defensa', 50, 'caida de pluma')
+GO
+INSERT INTO Encantamiento (tipo, durabilidad, nombre) values('daño', 50, 'fuego')
+GO
+INSERT INTO Encantamiento (tipo, durabilidad, nombre) values('construccion', 50, 'reparacion')	
+GO
+INSERT INTO Encantamiento (tipo, durabilidad, nombre) values('defensa', 50, 'reparacion')
+GO
+
+--Estadistica
+
+INSERT INTO Estadistica(dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (2, 5, 4, 5, 6)
+go
+INSERT INTO Estadistica(dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (2, 5, 4, 5, 6)
+go
+INSERT INTO Estadistica(dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (2, 5, 4, 5, 6)
+go
+INSERT INTO Estadistica(dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (2, 5, 4, 5, 6)
+go
+INSERT INTO Estadistica(dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (2, 5, 4, 5, 6)
+go
+INSERT INTO Estadistica(dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (2, 5, 4, 5, 6)
+go
+INSERT INTO Estadistica(dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (2, 5, 4, 5, 6)
+go
+INSERT INTO Estadistica(dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (2, 5, 4, 5, 6)
+go
+INSERT INTO Estadistica(dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (2, 5, 4, 5, 6)
+go
+INSERT INTO Estadistica(dsitanciaRecorrida, distanciaVolada, distanciaCaida, saltos, numeroMuertes) values (2, 5, 4, 5, 6)
+go
+
+--Estructura
+INSERT INTO Estructura( tipo, estilo) values ('desierto', 'piramide')
+GO
+INSERT INTO Estructura( tipo, estilo) values ('jungla', 'templo')
+GO
+INSERT INTO Estructura( tipo, estilo) values ('desierto', 'aldea')
+GO
+INSERT INTO Estructura( tipo, estilo) values ('bosque', 'casa de villagers')
+GO
+INSERT INTO Estructura( tipo, estilo) values ('jungla', 'aldea')
+GO
+INSERT INTO Estructura( tipo, estilo) values ('bosque', 'aldea de saqueadores')
+GO
+INSERT INTO Estructura( tipo, estilo) values ('desierto', 'piramide')
+GO
+INSERT INTO Estructura( tipo, estilo) values ('tundra', 'igloo')
+GO
+INSERT INTO Estructura( tipo, estilo) values ('desierto', 'piramide')
+
+GO
+INSERT INTO Estructura( tipo, estilo) values ('desierto', 'piramide')
+GO
+
+--Evento
+INSERT INTO Evento(tipo, fechaInicio, fechaCierre, duarbilidad) values ('juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4)
+go
+INSERT INTO Evento(tipo, fechaInicio, fechaCierre, duarbilidad) values ('juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4)
+go
+INSERT INTO Evento(tipo, fechaInicio, fechaCierre, duarbilidad) values ('juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4)
+go
+INSERT INTO Evento(tipo, fechaInicio, fechaCierre, duarbilidad) values ('juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4)
+go
+INSERT INTO Evento(tipo, fechaInicio, fechaCierre, duarbilidad) values ('juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4)
+go
+INSERT INTO Evento(tipo, fechaInicio, fechaCierre, duarbilidad) values ('juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4)
+go
+INSERT INTO Evento(tipo, fechaInicio, fechaCierre, duarbilidad) values ('juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4)
+go
+INSERT INTO Evento(tipo, fechaInicio, fechaCierre, duarbilidad) values ('juego', '2014-10-25 20:00:00', '2014-11-25 20:00:00', 4)
+go
+
+--Fluido
+INSERT INTO Fluido(tipo, nombre, nivelFluido) values ('frio', 'agua', 3)
+go
+INSERT INTO Fluido(tipo, nombre, nivelFluido) values ('caliente', 'lava', 1)
+go
+INSERT INTO Fluido(tipo, nombre, nivelFluido) values ('caliente', 'agua', 3)
+go
+INSERT INTO Fluido(tipo, nombre, nivelFluido) values ('frio', 'nieve', 0)
+go
+INSERT INTO Fluido(tipo, nombre, nivelFluido) values ('frio', 'agua', 3)
+go
+INSERT INTO Fluido(tipo, nombre, nivelFluido) values ('caliente', 'lava', 1)
+go
+INSERT INTO Fluido(tipo, nombre, nivelFluido) values ('caliente', 'agua', 3)
+go
+INSERT INTO Fluido(tipo, nombre, nivelFluido) values ('frio', 'agua', 3)
+go
+INSERT INTO Fluido(tipo, nombre, nivelFluido) values ('frio', 'agua', 3)
+go
+INSERT INTO Fluido(tipo, nombre, nivelFluido) values ('frio', 'agua', 3)
+go
+
+--Fortaleza
+INSERT INTO Fortaleza(botin, nombre, estilo) values ('oro', 'piramide', 'desierto')
+GO
+INSERT INTO Fortaleza(botin, nombre, estilo) values ('oro', 'templo', 'jungla')
+GO
+INSERT INTO Fortaleza(botin, nombre, estilo) values ('oro', 'fortaleza del netther', 'nether')
+GO
+INSERT INTO Fortaleza(botin, nombre, estilo) values ('hierro', 'Ender', 'cueva')
+GO
+INSERT INTO Fortaleza(botin, nombre, estilo) values ('hierro', 'casa de los villager', 'bosque')
+GO
+INSERT INTO Fortaleza(botin, nombre, estilo) values ('oro', 'piramide', 'desierto')
+GO
+INSERT INTO Fortaleza(botin, nombre, estilo) values ('oro', 'templo', 'jungla')
+GO
+INSERT INTO Fortaleza(botin, nombre, estilo) values ('oro', 'fortaleza del netther', 'nether')
+GO
+INSERT INTO Fortaleza(botin, nombre, estilo) values ('hierro', 'Ender', 'cueva')
+GO
+INSERT INTO Fortaleza(botin, nombre, estilo) values ('hierro', 'casa de los villager', 'bosque')
+GO
+
+--Generación
+INSERT INTO Generacion(tipo, lugarGeneracion) values ('Mundo', 'General')
+GO
+INSERT INTO Generacion(tipo, lugarGeneracion) values ('Jugador', 'bosque')
+GO
+INSERT INTO Generacion(tipo, lugarGeneracion) values ('Vaca', 'bosque')
+GO
+INSERT INTO Generacion(tipo, lugarGeneracion) values ('Conejo', 'desierto')
+GO
+INSERT INTO Generacion(tipo, lugarGeneracion) values ('gato', 'aldea')
+GO
+INSERT INTO Generacion(tipo, lugarGeneracion) values ('zombie', 'desierto')
+GO
+INSERT INTO Generacion(tipo, lugarGeneracion) values ('creeper', 'tundra')
+GO
+INSERT INTO Generacion(tipo, lugarGeneracion) values ('cabra', 'tundra')
+GO
+INSERT INTO Generacion(tipo, lugarGeneracion) values ('panda', 'bosque de bambus')
+GO
+INSERT INTO Generacion(tipo, lugarGeneracion) values ('abeja', 'bosque')
+GO
+
+--Herramienta
+INSERT INTO Herramienta(material, nombre, resistencia, tipo) values ('hierro', 'pala', 4, 'trabajo')
+GO
+INSERT INTO Herramienta(material, nombre, resistencia, tipo) values ('hierro', 'pala', 4, 'trabajo')
+GO
+INSERT INTO Herramienta(material, nombre, resistencia, tipo) values ('hierro', 'pala', 4, 'trabajo')
+GO
+INSERT INTO Herramienta(material, nombre, resistencia, tipo) values ('hierro', 'pala', 4, 'trabajo')
+GO
+INSERT INTO Herramienta(material, nombre, resistencia, tipo) values ('hierro', 'pala', 4, 'trabajo')
+GO
+INSERT INTO Herramienta(material, nombre, resistencia, tipo) values ('hierro', 'pala', 4, 'trabajo')
+GO
+INSERT INTO Herramienta(material, nombre, resistencia, tipo) values ('hierro', 'pala', 4, 'trabajo')
+GO
+INSERT INTO Herramienta(material, nombre, resistencia, tipo) values ('hierro', 'pala', 4, 'trabajo')
+GO
+INSERT INTO Herramienta(material, nombre, resistencia, tipo) values ('hierro', 'pala', 4, 'trabajo')
+GO
+INSERT INTO Herramienta(material, nombre, resistencia, tipo) values ('hierro', 'pala', 4, 'trabajo')
+GO
+
+--Inventario
+INSERT INTO Inventario(espacio) values (25)
+go
+INSERT INTO Inventario(espacio) values (5)
+go
+INSERT INTO Inventario(espacio) values (10)
+go
+INSERT INTO Inventario(espacio) values (15)
+go
+INSERT INTO Inventario(espacio) values (16)
+go
+INSERT INTO Inventario(espacio) values (22)
+go
+INSERT INTO Inventario(espacio) values (13)
+go
+INSERT INTO Inventario(espacio) values (11)
+go
+INSERT INTO Inventario(espacio) values (3)
+go
+INSERT INTO Inventario(espacio) values (5)
+go
+
+--Item
+INSERT INTO Item(tipo, nombre) values ('construccion', 'piedra')
+GO
+INSERT INTO Item(tipo, nombre) values ('comida', 'zanahoria')
+GO
+INSERT INTO Item(tipo, nombre) values ('defensa', 'escudo')
+GO
+INSERT INTO Item(tipo, nombre) values ('ataque', 'espada')
+GO
+INSERT INTO Item(tipo, nombre) values ('construccion', 'ladrillos')
+GO
+INSERT INTO Item(tipo, nombre) values ('construccion', 'madera')
+GO
+INSERT INTO Item(tipo, nombre) values ('comida', 'papa')
+GO
+INSERT INTO Item(tipo, nombre) values ('mecanismo', 'piedra rojiza')
+GO
+INSERT INTO Item(tipo, nombre) values ('musica', 'bloque musical')
+GO
+INSERT INTO Item(tipo, nombre) values ('construccion', 'diorita')
+GO
+
+--Jefe
+INSERT INTO Jefe(dimension, habilidad, puntosVida, nombre) values ( 'nether', 'daño', 3, 'gosth')
+GO
+INSERT INTO Jefe(dimension, habilidad, puntosVida, nombre) values ( 'ender', 'daño', 5, 'dragon')
+GO
+INSERT INTO Jefe(dimension, habilidad, puntosVida, nombre) values ( 'overworld', 'daño', 8, 'wither')
+GO
+INSERT INTO Jefe(dimension, habilidad, puntosVida, nombre) values ( 'nether', 'daño', 8, 'wither')
+GO
+INSERT INTO Jefe(dimension, habilidad, puntosVida, nombre) values ( 'ender', 'daño', 6, 'wither')
+GO
+INSERT INTO Jefe(dimension, habilidad, puntosVida, nombre) values ( 'nether', 'daño', 3, 'gosth')
+GO
+INSERT INTO Jefe(dimension, habilidad, puntosVida, nombre) values ( 'ender', 'daño', 5, 'dragon')
+GO
+INSERT INTO Jefe(dimension, habilidad, puntosVida, nombre) values ( 'overworld', 'daño', 8, 'wither')
+GO
+INSERT INTO Jefe(dimension, habilidad, puntosVida, nombre) values ( 'nether', 'daño', 8, 'wither')
+GO
+INSERT INTO Jefe(dimension, habilidad, puntosVida, nombre) values ( 'ender', 'daño', 6, 'wither')
+GO
+
+--Menu
+INSERT INTO Menu(accion) values ('reanudar juego')
+GO
+INSERT INTO Menu(accion) values ('ajustes')
+GO
+INSERT INTO Menu(accion) values ('mercado')
+GO
+INSERT INTO Menu(accion) values ('guardar y salir')
+GO
+INSERT INTO Menu(accion) values ('vestidor')
+GO
+INSERT INTO Menu(accion) values ('invitar al juego')
+GO
+INSERT INTO Menu(accion) values ('logros')
+GO
+INSERT INTO Menu(accion) values ('permisos del jugador')
+GO
+INSERT INTO Menu(accion) values ('nivel de permisos')
+GO
+INSERT INTO Menu(accion) values ('usuarios')
+GO
+
+--MesaTrabajo
+INSERT INTO MesaTrabajo(tipo, idInventario) values ('mesa de crafteo', 1)
+GO
+INSERT INTO MesaTrabajo(tipo, idInventario) values ('mesa de herreria', 2) 
+GO
+INSERT INTO MesaTrabajo(tipo, idInventario) values ('mesa de encantamiento', 3)
+GO
+INSERT INTO MesaTrabajo(tipo, idInventario) values ('mesa de pociones', 4)
+GO
+INSERT INTO MesaTrabajo(tipo, idInventario) values ('mesa de crafteo', 5)
+GO
+INSERT INTO MesaTrabajo(tipo, idInventario) values ('mesa de cartografía', 6)
+GO
+INSERT INTO MesaTrabajo(tipo, idInventario) values ('telar', 7)
+GO
+INSERT INTO MesaTrabajo(tipo, idInventario) values ('cortapiedra', 8)
+GO
+INSERT INTO MesaTrabajo(tipo, idInventario) values ('yunque', 9)
+GO
+INSERT INTO MesaTrabajo(tipo, idInventario) values ('mesa de pociones',10)
+GO
+
+--Mob
+INSERT INTO Mob(puntosVida, botin, habilidad,  nombre, puntosDaño) values (6, 'carne podrida', 'golpe', 'zombie', 2)
+go
+INSERT INTO Mob(puntosVida, botin, habilidad,  nombre, puntosDaño) values (5, 'ojo de araña', 'picadura', 'araña', 1)
+go
+INSERT INTO Mob(puntosVida, botin, habilidad,  nombre, puntosDaño) values (6, 'polvora', 'explosion', 'creeper', 6)
+go
+INSERT INTO Mob(puntosVida, botin, habilidad,  nombre, puntosDaño) values (8, 'ojo de ender', 'teletransportar', 'enderman', 6)
+go
+INSERT INTO Mob(puntosVida, botin, habilidad,  nombre, puntosDaño) values (6, 'calavera', 'arquear', 'esqueleto',2)
+go
+INSERT INTO Mob(puntosVida, botin, habilidad,  nombre, puntosDaño) values (6, 'carne podrida', 'golpe con veneno', 'vaina', 3)
+go
+INSERT INTO Mob(puntosVida, botin, habilidad,  nombre, puntosDaño) values (5, 'telaraña', 'picadura con veneno', 'araña de cueva',2)
+go
+INSERT INTO Mob(puntosVida, botin, habilidad,  nombre, puntosDaño) values (6, 'pepita de oro', 'golpe', 'porquero zombie',2)
+go
+INSERT INTO Mob(puntosVida, botin, habilidad,  nombre, puntosDaño) values (6, 'redstone', 'hechizos', 'bruja',  2)
+go
+INSERT INTO Mob(puntosVida, botin, habilidad,  nombre, puntosDaño) values (6, 'obsidiana', 'trueque con oro', 'pigling', 2)
+go
+
+--Modd
+INSERT INTO Modd(nombre, versionMod) values ('Inventory HUD', 1.19)
+GO
+INSERT INTO Modd(nombre, versionMod) values ('Alex´s mobs mod', 1.18)
+GO
+INSERT INTO Modd(nombre, versionMod) values ('Cooking For Blockheads Mod', 1.18)
+GO
+INSERT INTO Modd(nombre, versionMod) values ('Carry on Mod', 1.17 )
+GO
+INSERT INTO Modd(nombre, versionMod) values ('Mascaw´s Trapdoors Mod', 1.18)
+GO
+INSERT INTO Modd(nombre, versionMod) values ('The one Prove Mod', 1.16)
+GO
+INSERT INTO Modd(nombre, versionMod) values ('Jade Mod', 1.15)
+GO
+INSERT INTO Modd(nombre, versionMod) values ('Biomes O´Plenty Mod', 1.18)
+GO
+INSERT INTO Modd(nombre, versionMod) values ('Cosmetic Armor Mod', 1.19)
+GO
+INSERT INTO Modd(nombre, versionMod) values ('Comforts Mod', 1.14)
+GO
+
+--ModoJuego
+INSERT INTO ModoJuego(tipo, dificultad, preferencia) values ('sky block', 'normal', 'mapa inicial')
+GO
+INSERT INTO ModoJuego(tipo, dificultad, preferencia) values ('Clasico', 'dificil', 'cofre de bonificacion')
+GO
+INSERT INTO ModoJuego(tipo, dificultad, preferencia) values ('One block', 'normal', 'nulo')
+GO
+INSERT INTO ModoJuego(tipo, dificultad, preferencia) values ('clasico', 'experto', 'nulo')
+GO
+INSERT INTO ModoJuego(tipo, dificultad, preferencia) values ('super plano', 'facil', 'nulo')
+GO
+INSERT INTO ModoJuego(tipo, dificultad, preferencia) values ('sky block', 'dificil', 'mapa inical')
+GO
+INSERT INTO ModoJuego(tipo, dificultad, preferencia) values ('sky block', 'facil', 'cofre de bonificacion')
+GO
+INSERT INTO ModoJuego(tipo, dificultad, preferencia) values ('clkasico', 'facil', 'cofre de bonificacion')
+GO
+INSERT INTO ModoJuego(tipo, dificultad, preferencia) values ('one block', 'normal', 'n¿mapoa inicial')
+GO
+INSERT INTO ModoJuego(tipo, dificultad, preferencia) values ('sky block', 'normal', 'si')
+GO
+
+--ModoServidor
+INSERT INTO ModoServidor(tipo) values ('HyPlex')
+GO
+INSERT INTO ModoServidor(tipo) values ('Librecraft')
+GO
+INSERT INTO ModoServidor(tipo) values ('Complex Gaming')
+GO
+INSERT INTO ModoServidor(tipo) values ('MineLatino Network')
+GO
+INSERT INTO ModoServidor(tipo) values ('Deluxe Zone ')
+GO
+INSERT INTO ModoServidor(tipo) values ('Supercraft')
+GO
+INSERT INTO ModoServidor(tipo) values ('UniversoCraft')
+GO
+INSERT INTO ModoServidor(tipo) values ('Skycraft')
+GO
+INSERT INTO ModoServidor(tipo) values ('privado')
+GO
+INSERT INTO ModoServidor(tipo) values ('Mineplex')
+GO
+
+
+--Sonido
+INSERT INTO Sonido(principal, musica, ambiente, bloque, criatura) values (9, 8, 7, 6, 5)
+go
+INSERT INTO Sonido(principal, musica, ambiente, bloque, criatura) values (8, 7, 6, 5, 4)
+go
+INSERT INTO Sonido(principal, musica, ambiente, bloque, criatura) values (7, 6, 5, 4, 3)
+go
+INSERT INTO Sonido(principal, musica, ambiente, bloque, criatura) values (6, 5, 4, 3, 2)
+go
+INSERT INTO Sonido(principal, musica, ambiente, bloque, criatura) values (5, 4, 3, 2, 1)
+go
+INSERT INTO Sonido(principal, musica, ambiente, bloque, criatura) values (4, 3, 2, 1, 0)
+go
+INSERT INTO Sonido(principal, musica, ambiente, bloque, criatura) values (3, 2, 1, 0, 1)
+go
+INSERT INTO Sonido(principal, musica, ambiente, bloque, criatura) values (2, 1, 0, 1, 2)
+go
+INSERT INTO Sonido(principal, musica, ambiente, bloque, criatura) values (1, 0, 1, 2, 3)
+go
+INSERT INTO Sonido(principal, musica, ambiente, bloque, criatura) values (0, 1, 2, 3, 4)
+go
+
+--PackRecurso
+INSERT INTO PackRecurso(nombre, formato) values ('LB Photo Realism Reload', 'zip')
+GO
+INSERT INTO PackRecurso(nombre, formato) values ('Faithful', 'rar')
+GO
+INSERT INTO PackRecurso(nombre, formato) values ('SapixCraft', 'rar')
+GO
+INSERT INTO PackRecurso(nombre, formato) values ('Modern HD', 'zip')
+GO
+INSERT INTO PackRecurso(nombre, formato) values ('CoterieCraft', 'zip')
+GO
+INSERT INTO PackRecurso(nombre, formato) values ('Eternal Hearts', 'zip')
+GO
+INSERT INTO PackRecurso(nombre, formato) values ('Jolicraft', 'zip')
+GO
+INSERT INTO PackRecurso(nombre, formato) values ('Conquest', 'rar')
+GO
+INSERT INTO PackRecurso(nombre, formato) values ('Eternal Hearts', 'zip')
+GO
+INSERT INTO PackRecurso(nombre, formato) values ('Jolicraft', 'zip')
+GO
+
+--PackTextura
+INSERT INTO PackTextura(nombre, formato) values ('Bare bones', 'zip')
+GO
+INSERT INTO PackTextura(nombre, formato) values ('Retro NES', 'zip')
+GO
+INSERT INTO PackTextura(nombre, formato) values ('Mythic', 'zip')
+GO
+INSERT INTO PackTextura(nombre, formato) values ('John Smith Legacy', 'rar')
+GO
+INSERT INTO PackTextura(nombre, formato) values ('DokuCraft', 'zip')
+GO
+INSERT INTO PackTextura(nombre, formato) values ('Default photo realism', 'rar')
+GO
+INSERT INTO PackTextura(nombre, formato) values ('Realistico', 'zip')
+GO
+INSERT INTO PackTextura(nombre, formato) values ('Sphax PureBDCraft', 'zip')
+GO
+INSERT INTO PackTextura(nombre, formato) values ('Soartex Texture pack', 'rar')
+GO
+INSERT INTO PackTextura(nombre, formato) values ('Classic 3D Texture Pack', 'zip')
+GO
+
+--Parche
+INSERT INTO Parche(versioParche,  fechaActualizacion) values (1.14, '04/22/2010')
+go
+INSERT INTO Parche(versioParche,  fechaActualizacion) values (1.14,  '06/26/2010')
+go
+INSERT INTO Parche(versioParche, fechaActualizacion) values (1.15, '10/05/2010')
+go
+INSERT INTO Parche(versioParche,  fechaActualizacion) values (1.15, '12/12/2010')
+go
+INSERT INTO Parche(versioParche,  fechaActualizacion) values (1.16,  '01/30/2011')
+go
+INSERT INTO Parche(versioParche, fechaActualizacion) values (1.16, '01/25/2011')
+go
+INSERT INTO Parche(versioParche,  fechaActualizacion) values (1.162, '10/26/2011')
+go
+INSERT INTO Parche(versioParche,  fechaActualizacion) values (1.162,  '11/06/2017')
+go
+INSERT INTO Parche(versioParche, fechaActualizacion) values (1.17, '05/05/2018')
+go
+INSERT INTO Parche(versioParche, fechaActualizacion) values (1.17, '11/22/2019')
+go
+
+--Mundo
+INSERT INTO Mundo(nombre, tipo, idParche) values ('ayf', 'clasico', 1)
+go
+INSERT INTO Mundo(nombre, tipo ,idParche) values ('nom ', 'one block', 2)
+go
+INSERT INTO Mundo(nombre, tipo ,idParche) values ('reyes', 'sky block', 3)
+go
+INSERT INTO Mundo(nombre, tipo ,idParche) values ('lasaña', 'super plano', 4)
+go
+INSERT INTO Mundo(nombre, tipo ,idParche) values ('run', 'clasico', 5)
+go
+INSERT INTO Mundo(nombre, tipo ,idParche) values ('ayfer', 'one block', 6)
+go
+INSERT INTO Mundo(nombre, tipo ,idParche) values ('resistencia', 'super plano', 7)
+go
+INSERT INTO Mundo(nombre, tipo ,idParche) values ('mundo', 'clasico', 8)
+go
+INSERT INTO Mundo(nombre, tipo ,idParche) values ('nuevo mundo', 'one block', 9)
+go
+INSERT INTO Mundo(nombre, tipo ,idParche) values ('copia', 'clasico', 10)
+go
+
+--Pesca
+INSERT INTO Pesca(tipo, botin) values ('cubeta', 'salmón')
+GO
+INSERT INTO Pesca(tipo, botin) values ('caña de pescar', 'pez globo')
+GO
+INSERT INTO Pesca(tipo, botin) values ('caña de pescar', 'salmon')
+GO
+INSERT INTO Pesca(tipo, botin) values ('cubeta', 'ajolote')
+GO
+INSERT INTO Pesca(tipo, botin) values ('caña de pescar', 'pez payaso')
+GO
+INSERT INTO Pesca(tipo, botin) values ('cubeta', 'pez payaso')
+GO
+INSERT INTO Pesca(tipo, botin) values ('cubeta', 'esponja')
+GO
+INSERT INTO Pesca(tipo, botin) values ('caña de pescar', 'libros encantados')
+GO
+INSERT INTO Pesca(tipo, botin) values ('caña de pescar', 'bacalao')
+GO
+INSERT INTO Pesca(tipo, botin) values ('cubeta', 'bacalao')
+GO
+
+--Plugin
+INSERT INTO Plugin(nombre, main, versionPlugin) values ('EsentialsX Chat', 'EsentialsX', 1.8)
+go
+INSERT INTO Plugin(nombre, main, versionPlugin) values ('Multiverse-core', 'Multiverse-core', 1.9)
+go
+INSERT INTO Plugin(nombre, main, versionPlugin) values ('LuckyPerms', 'LuckyPerms', 1.14)
+go
+INSERT INTO Plugin(nombre, main, versionPlugin) values ('ViaBackWards', 'ViaVersion', 1.15)
+go
+INSERT INTO Plugin(nombre, main, versionPlugin) values ('Sternalboard', 'Sternalboard', 1.10)
+go
+INSERT INTO Plugin(nombre, main, versionPlugin) values ('EsentialsX Spawn', 'EsentialsX', 1.8)
+go
+INSERT INTO Plugin(nombre, main, versionPlugin) values ('EsentialsX Protect', 'EsentialsX', 1.8)
+go
+INSERT INTO Plugin(nombre, main, versionPlugin) values ('ViaVersioniarewind', 'ViaVersion', 1.15)
+go
+INSERT INTO Plugin(nombre, main, versionPlugin) values ('skript', 'skript', 1.11)
+go
+INSERT INTO Plugin(nombre, main, versionPlugin) values ('Towny', 'Towny', 1.18)
+go
+
+--Pocion
+INSERT INTO Pocion(nombre, tipo, puntosDaño, puntosVida) values ('curación', 'arojadiza', 0, 8)
+go
+INSERT INTO Pocion(nombre, tipo, puntosDaño, puntosVida) values ('Debilidad', 'arojadiza', 5, 0)
+go
+INSERT INTO Pocion(nombre, tipo, puntosDaño, puntosVida) values ('Fuerza ll', 'consumible', 0, 8)
+go
+INSERT INTO Pocion(nombre, tipo, puntosDaño, puntosVida) values ('Regeneracion', 'consumible', 0, 8)
+go
+INSERT INTO Pocion(nombre, tipo, puntosDaño, puntosVida) values ('Velocidad', 'arojadiza', 0, 0)
+go
+INSERT INTO Pocion(nombre, tipo, puntosDaño, puntosVida) values ('Velocidad', 'consumible', 0, 0)
+go
+INSERT INTO Pocion(nombre, tipo, puntosDaño, puntosVida) values ('Lentitud', 'arojadiza', 0, 0)
+go
+INSERT INTO Pocion(nombre, tipo, puntosDaño, puntosVida) values ('Daño instntaneo', 'arojadiza', 2, 0)
+go
+INSERT INTO Pocion(nombre, tipo, puntosDaño, puntosVida) values ('Veneno', 'arojadiza', 1, 0)
+go
+INSERT INTO Pocion(nombre, tipo, puntosDaño, puntosVida) values ('Vision nocturna', 'consumible', 0, 0)
+go
+
+--Servidor
+INSERT INTO Servidor(nombre, dificultad, idModoServidor) values ('pointer', 'normal', 1)
+go
+INSERT INTO Servidor(nombre, dificultad, idModoServidor) values ('resuna', 'dificil', 2)
+go
+INSERT INTO Servidor(nombre, dificultad, idModoServidor) values ('press', 'experto', 3)
+go
+INSERT INTO Servidor(nombre, dificultad, idModoServidor) values ('resina', 'facil', 4)
+go
+INSERT INTO Servidor(nombre, dificultad, idModoServidor) values ('cincuenta', 'normal', 5)
+go
+INSERT INTO Servidor(nombre, dificultad, idModoServidor) values ('pvp', 'facil', 6)
+go
+INSERT INTO Servidor(nombre, dificultad, idModoServidor) values ('sierra', 'normal', 7)
+go
+INSERT INTO Servidor(nombre, dificultad, idModoServidor) values ('ropero', 'dificil', 8)
+go
+INSERT INTO Servidor(nombre, dificultad, idModoServidor) values ('puertio', 'experto', 9)
+go
+INSERT INTO Servidor(nombre, dificultad, idModoServidor) values ('poisero', 'normal', 10)
+go
+
+--Stack
+INSERT INTO Stack(nombre, limiteItem, idInventario) values ('zanahoria', 64, 1)
+go
+INSERT INTO Stack(nombre, limiteItem, idInventario) values ('roca', 64, 2)
+go
+INSERT INTO Stack(nombre, limiteItem, idInventario) values ('vidrio', 64, 3)
+go
+INSERT INTO Stack(nombre, limiteItem, idInventario) values ('antorcha', 64, 4)
+go
+INSERT INTO Stack(nombre, limiteItem, idInventario) values ('botas de hierro', 1, 5)
+go
+INSERT INTO Stack(nombre, limiteItem, idInventario) values ('casco de oro', 1, 6)
+go
+INSERT INTO Stack(nombre, limiteItem, idInventario) values ('papa', 64, 7)
+go
+INSERT INTO Stack(nombre, limiteItem, idInventario) values ('hierro', 64, 8)
+go
+INSERT INTO Stack(nombre, limiteItem, idInventario) values ('bloque de obsidiana', 64, 9)
+go
+INSERT INTO Stack(nombre, limiteItem, idInventario) values ('remolacha', 64, 10)
+go
+
+--Templo
+INSERT INTO Templo(estilo, tipo, nombre, botin) values ('piramide', 'desierto', 'piramide del desierto', 'oro')
+GO
+INSERT INTO Templo(estilo, tipo, nombre, botin) values ('templo', 'jungla', 'templo de jungla', 'oro')
+GO
+INSERT INTO Templo(estilo, tipo, nombre, botin) values ('templo', 'mar', ' templo marino', 'esponjas')
+GO
+INSERT INTO Templo(estilo, tipo, nombre, botin) values ('templo', 'jungla', 'templo de jungla', 'diamante')
+GO
+INSERT INTO Templo(estilo, tipo, nombre, botin) values('templo', 'jungla', 'templo de jungla', 'lingote de hierro')
+GO
+INSERT INTO Templo(estilo, tipo, nombre, botin) values ('templo', 'jungla', 'templo de jungla', 'lingote de oro')
+go
+INSERT INTO Templo(estilo, tipo, nombre, botin) values ('templo', 'jungla', 'templo de jungla', 'esmeralda')
+GO
+INSERT INTO Templo(estilo, tipo, nombre, botin) values ('templo', 'jungla', 'templo de jungla', 'hueso')
+GO
+INSERT INTO Templo(estilo, tipo, nombre, botin) values ('piramide', 'desierto', 'piramide del desierto', 'armadura de hierro para caballo')
+GO
+INSERT INTO Templo(estilo, tipo, nombre, botin) values ('piramide', 'desierto', 'piramide del desierto', 'montura')
+GO
+
+--Tesoro
+INSERT INTO Tesoro(tipo, botin) values ('enterrado', 'corazón de mar')
+GO
+INSERT INTO Tesoro(tipo, botin) values ('enterrado', ' armadura para caballo')
+GO
+INSERT INTO Tesoro(tipo, botin) values ('enterrado', 'mapa en blanco')
+GO
+INSERT INTO Tesoro(tipo, botin) values ('enterrado', 'lingote de hierro')
+GO
+INSERT INTO Tesoro(tipo, botin) values ('barco hundido', 'hilo')
+GO
+INSERT INTO Tesoro(tipo, botin) values ('barco hundido', 'bola de slime')
+GO
+INSERT INTO Tesoro(tipo, botin) values ('barco hundido', 'pico de piedra')
+GO
+INSERT INTO Tesoro(tipo, botin) values ('barco hundido', 'Lingote de oro')
+GO
+INSERT INTO Tesoro(tipo, botin) values ('barco hundido', 'Lingote de hierro')
+GO
+INSERT INTO Tesoro(tipo, botin) values ('enterrado', 'esmeralda')
+GO
+
+--Crafteo
+INSERT INTO Crafteo(tipo, detalle, idMesatrabajo, idInventario) values ('mesa de trabajo', 'pechera de hierro con 5 de resistencia', 1, 1)
+go
+INSERT INTO Crafteo(tipo, detalle, idMesatrabajo, idInventario) values ('mesa de trabajo', 'pala de madera con 3 de resistencia', 2, 2)
+go
+INSERT INTO Crafteo(tipo, detalle, idMesatrabajo, idInventario) values ('mesa de trabajo', 'cama color blanca', 3, 3)
+go
+INSERT INTO Crafteo(tipo, detalle, idMesatrabajo, idInventario) values ('inventario', 'mesa de trabajo', 4, 4)
+go
+INSERT INTO Crafteo(tipo, detalle, idMesatrabajo, idInventario) values ('mesa de trabajo', 'horno de piedra', 5, 5)
+go
+INSERT INTO Crafteo(tipo, detalle, idMesatrabajo, idInventario) values ('mesa de trabajo', 'hacha de madera con 3 de resistencia', 6, 6)
+go
+INSERT INTO Crafteo(tipo, detalle, idMesatrabajo, idInventario) values ('mesa de trabajo', 'pala de hierro con 5 de resistencia', 7, 7)
+go
+INSERT INTO Crafteo(tipo, detalle, idMesatrabajo, idInventario) values ('inventario', 'antorcha con carbón vegetal', 8, 8)
+go
+INSERT INTO Crafteo(tipo, detalle, idMesatrabajo, idInventario) values ('inventario', 'palos de madera', 9, 9)
+go
+INSERT INTO Crafteo(tipo, detalle, idMesatrabajo, idInventario) values ('inventario', 'mechero', 10, 10)
+go
+
+
+--Jugador
+INSERT INTO Jugador(gamertag, aspecto, puntosVida, puntosAlimento, puntosExperiencia, idInventario, idConfigMundo, idMenu, idConfigUsuario, idEstadistica) values ('AxRadiel', 'personalizado', 4, 1, 4, 1, 1, 1, 1, 1)
+go
+INSERT INTO Jugador(gamertag, aspecto, puntosVida, puntosAlimento, puntosExperiencia, idInventario, idConfigMundo, idMenu, idConfigUsuario, idEstadistica) values ('pepe', 'vaca', 5, 5, 7, 2, 2, 2, 2, 2)
+go
+INSERT INTO Jugador(gamertag, aspecto, puntosVida, puntosAlimento, puntosExperiencia, idInventario, idConfigMundo, idMenu, idConfigUsuario, idEstadistica) values ('barbiqiu', 'calamardo', 5, 3, 2, 3, 3, 3, 3, 3)
+go
+INSERT INTO Jugador(gamertag, aspecto, puntosVida, puntosAlimento, puntosExperiencia, idInventario, idConfigMundo, idMenu, idConfigUsuario, idEstadistica) values ('platano', 'platano', 6, 5, 7, 4, 4, 4, 4, 4)
+go
+INSERT INTO Jugador(gamertag, aspecto, puntosVida, puntosAlimento, puntosExperiencia, idInventario, idConfigMundo, idMenu, idConfigUsuario, idEstadistica) values ('rosa', 'alex', 5, 2, 1, 5, 5, 5, 5, 5)
+go
+INSERT INTO Jugador(gamertag, aspecto, puntosVida, puntosAlimento, puntosExperiencia, idInventario, idConfigMundo, idMenu, idConfigUsuario, idEstadistica) values ('sierra', 'steve', 7, 8, 14, 6, 6, 6, 6, 6)
+go
+INSERT INTO Jugador(gamertag, aspecto, puntosVida, puntosAlimento, puntosExperiencia, idInventario, idConfigMundo, idMenu, idConfigUsuario, idEstadistica) values ('rona', 'cerdo', 7, 4, 4, 7, 7, 7, 7, 7)
+go
+INSERT INTO Jugador(gamertag, aspecto, puntosVida, puntosAlimento, puntosExperiencia, idInventario, idConfigMundo, idMenu, idConfigUsuario, idEstadistica) values ('fer', 'creeper', 8, 2, 4, 8, 8, 8, 8, 8)
+go
+INSERT INTO Jugador(gamertag, aspecto, puntosVida, puntosAlimento, puntosExperiencia, idInventario, idConfigMundo, idMenu, idConfigUsuario, idEstadistica) values ('fer', 'creeper', 8, 2, 4, 9 , 9, 9, 9, 9)
+go
+INSERT INTO Jugador(gamertag, aspecto, puntosVida, puntosAlimento, puntosExperiencia, idInventario, idConfigMundo, idMenu, idConfigUsuario, idEstadistica) values ('manuel', 'personalizado', 7, 9, 2, 10, 10, 10,10, 10)
+go
+
+
+--Logro
+INSERT INTO Logro(nombre, recompensa, puntosJugador, tiempoJuego, tipo, idJugador) values ('consiguiendo una mejora', 'puntos de experiencia', 15, 48, 'inicio', 1)
+go
+INSERT INTO Logro(nombre, recompensa, puntosJugador, tiempoJuego, tipo, idJugador) values ('desencantado', 'emblema', 10, 48, 'progreso', 2)
+go
+INSERT INTO Logro(nombre, recompensa, puntosJugador, tiempoJuego, tipo, idJugador) values ('ecolocación', 'puntos de experiencia', 20, 48, 'progreso', 3)
+go
+INSERT INTO Logro(nombre, recompensa, puntosJugador, tiempoJuego, tipo, idJugador) values ('asesino de monstruos', 'puntos de experiencia', 10, 48, 'inicio', 4)
+go
+INSERT INTO Logro(nombre, recompensa, puntosJugador, tiempoJuego, tipo, idJugador) values ('volquete de vacas', 'puntos de experiencia', 15, 48, 'inicio', 5)
+go
+INSERT INTO Logro(nombre, recompensa, puntosJugador, tiempoJuego, tipo, idJugador) values ('delicioso pescado', 'emblema', 10, 48, 'progreso', 6)
+go
+INSERT INTO Logro(nombre, recompensa, puntosJugador, tiempoJuego, tipo, idJugador) values ('ésto es una señal', 'emblema', 15, 48, 'progreso', 7)
+go
+INSERT INTO Logro(nombre, recompensa, puntosJugador, tiempoJuego, tipo, idJugador) values ('super combustible', 'emblema', 20, 48, 'inicio', 8)
+go
+INSERT INTO Logro(nombre, recompensa, puntosJugador, tiempoJuego, tipo, idJugador) values ('hora de aventuras', 'puntos de experiencia', 30, 48, 'progreso', 9)
+go
+INSERT INTO Logro(nombre, recompensa, puntosJugador, tiempoJuego, tipo, idJugador) values ('soy rico', 'puntos de experiencia', 30, 48, 'final', 10)
+go
+
+--Mascota
+INSERT INTO Mascota(nombre, tipo, puntosVida, comida, idJugador) values ('Fernando', 'oso panda', 7, 8, 1)
+go
+INSERT INTO Mascota(nombre, tipo, puntosVida, comida, idJugador) values ('tigrita', 'gato', 7, 2, 2)
+go
+INSERT INTO Mascota(nombre, tipo, puntosVida, comida, idJugador) values ('lola', 'gato', 7, 5, 3)
+go
+INSERT INTO Mascota(nombre, tipo, puntosVida, comida, idJugador) values ('niña', 'lobo', 7, 6, 4)
+go
+INSERT INTO Mascota(nombre, tipo, puntosVida, comida, idJugador) values ('chase', 'lobo', 7, 8, 5)
+go
+INSERT INTO Mascota(nombre, tipo, puntosVida, comida, idJugador) values ('gatote', 'gato', 7, 2, 6)
+go
+INSERT INTO Mascota(nombre, tipo, puntosVida, comida, idJugador) values ('blanquito', 'gato', 7, 9, 7)
+go
+INSERT INTO Mascota(nombre, tipo, puntosVida, comida, idJugador) values ('pato', 'caballo', 7, 6, 8)
+go
+INSERT INTO Mascota(nombre, tipo, puntosVida, comida, idJugador) values ('maggie', 'gato', 7, 5, 9)
+go
+INSERT INTO Mascota(nombre, tipo, puntosVida, comida, idJugador) values ('liru', 'loro', 7, 8, 10) 
+go
+
+--MundoParche
+INSERT INTO MundoParche(idMundo, idParche) values (1, 1)
+go
+INSERT INTO MundoParche(idMundo, idParche) values (2, 2)
+go
+INSERT INTO MundoParche(idMundo, idParche) values (3, 3)
+go
+INSERT INTO MundoParche(idMundo, idParche) values (4, 4)
+go
+INSERT INTO MundoParche(idMundo, idParche) values (5, 5)
+go
+INSERT INTO MundoParche(idMundo, idParche) values (6, 6)
+go
+INSERT INTO MundoParche(idMundo, idParche) values (7, 7)
+go
+INSERT INTO MundoParche(idMundo, idParche) values (8, 8)
+go
+INSERT INTO MundoParche(idMundo, idParche) values (9, 9)
+go
+INSERT INTO MundoParche(idMundo, idParche) values (10, 10)
+go
+
+--EncantamientoEfecto
+INSERT INTO EncantamientoEfecto(idEncantamiento, idEfecto) values (1, 1)
+go
+INSERT INTO EncantamientoEfecto(idEncantamiento, idEfecto) values (2, 2)
+go
+INSERT INTO EncantamientoEfecto(idEncantamiento, idEfecto) values (3, 3)
+go
+INSERT INTO EncantamientoEfecto(idEncantamiento, idEfecto) values (4, 4)
+go
+INSERT INTO EncantamientoEfecto(idEncantamiento, idEfecto) values (5, 5)
+go
+INSERT INTO EncantamientoEfecto(idEncantamiento, idEfecto) values (6, 6)
+go
+INSERT INTO EncantamientoEfecto(idEncantamiento, idEfecto) values (7, 7)
+go
+INSERT INTO EncantamientoEfecto(idEncantamiento, idEfecto) values (8, 8)
+go
+INSERT INTO EncantamientoEfecto(idEncantamiento, idEfecto) values (9, 9)
+go
+INSERT INTO EncantamientoEfecto(idEncantamiento, idEfecto) values (10, 10)
+go
+
+--JugadorAmigo
+INSERT INTO JugadorAmigo(idJugador, idAmigo) values (1, 1)
+go
+INSERT INTO JugadorAmigo(idJugador, idAmigo) values (2, 2)
+go
+INSERT INTO JugadorAmigo(idJugador, idAmigo) values (3, 3)
+go
+INSERT INTO JugadorAmigo(idJugador, idAmigo) values (4, 4)
+go
+INSERT INTO JugadorAmigo(idJugador, idAmigo) values (5, 5)
+go
+INSERT INTO JugadorAmigo(idJugador, idAmigo) values (6, 6)
+go
+INSERT INTO JugadorAmigo(idJugador, idAmigo) values (7, 7)
+go
+INSERT INTO JugadorAmigo(idJugador, idAmigo) values (8, 8)
+go
+INSERT INTO JugadorAmigo(idJugador, idAmigo) values (9, 9)
+go
+INSERT INTO JugadorAmigo(idJugador, idAmigo) values (10, 10)
+go
+
+--JugadorComercio
+INSERT INTO JugadorComercio(idJugador, idComercio) values (1, 1)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (2, 2)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (3, 3)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (4, 4)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (5, 5)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (6, 6)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (7, 7)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (8, 8)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (9, 9)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (10, 10)
+go
+
+--JugadorItem
+INSERT INTO JugadorComercio(idJugador, idComercio) values (1, 1)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (2, 2)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (3, 3)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (4, 4)
+go 
+INSERT INTO JugadorComercio(idJugador, idComercio) values (5, 5)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (6, 6)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (7, 7)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (8, 8)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (9, 9)
+go
+INSERT INTO JugadorComercio(idJugador, idComercio) values (10, 10)
+go
+
+--JugadorServidor
+INSERT INTO JugadorServidor(idJugador, idServidor) values (1, 1)
+go
+INSERT INTO JugadorServidor(idJugador, idServidor) values (2, 2)
+go
+INSERT INTO JugadorServidor(idJugador, idServidor) values (3, 3)
+go
+INSERT INTO JugadorServidor(idJugador, idServidor) values (4, 4)
+go
+INSERT INTO JugadorServidor(idJugador, idServidor) values (5, 5)
+go
+INSERT INTO JugadorServidor(idJugador, idServidor) values (6, 6)
+go
+INSERT INTO JugadorServidor(idJugador, idServidor) values (7, 7)
+go
+INSERT INTO JugadorServidor(idJugador, idServidor) values (8, 8)
+go
+INSERT INTO JugadorServidor(idJugador, idServidor) values (9, 9)
+go
+INSERT INTO JugadorServidor(idJugador, idServidor) values (10, 10)
+go
+
+--MesaTrabajoEncantamiento
+INSERT INTO MesaTrabajoEncantamiento(idMesaTrabajo, idEncantamiento) values (1, 1)
+go
+INSERT INTO MesaTrabajoEncantamiento(idMesaTrabajo, idEncantamiento) values(2, 2)
+go
+INSERT INTO MesaTrabajoEncantamiento(idMesaTrabajo, idEncantamiento) values (3, 3)
+go
+INSERT INTO MesaTrabajoEncantamiento(idMesaTrabajo, idEncantamiento) values (4, 4)
+go
+INSERT INTO MesaTrabajoEncantamiento(idMesaTrabajo, idEncantamiento) values (5, 5)
+go
+INSERT INTO MesaTrabajoEncantamiento(idMesaTrabajo, idEncantamiento) values (6, 6)
+go
+INSERT INTO MesaTrabajoEncantamiento(idMesaTrabajo, idEncantamiento) values (7, 7)
+go
+INSERT INTO MesaTrabajoEncantamiento(idMesaTrabajo, idEncantamiento) values (8, 8)
+go
+INSERT INTO MesaTrabajoEncantamiento(idMesaTrabajo, idEncantamiento) values (9, 9)
+go
+INSERT INTO MesaTrabajoEncantamiento(idMesaTrabajo, idEncantamiento) values (10, 10)
+go
+
+--MundoAldea
+INSERT INTO MundoAldea(idMundo, idAldea) values (1, 1)
+go
+INSERT INTO MundoAldea(idMundo, idAldea) values (2, 2)
+go
+INSERT INTO MundoAldea(idMundo, idAldea) values (3, 3)
+go
+INSERT INTO MundoAldea(idMundo, idAldea) values (4, 4)
+go
+INSERT INTO MundoAldea(idMundo, idAldea) values (5, 5)
+go
+INSERT INTO MundoAldea(idMundo, idAldea) values (6, 6)
+go
+INSERT INTO MundoAldea(idMundo, idAldea) values (7, 7)
+go
+INSERT INTO MundoAldea(idMundo, idAldea) values (8, 8)
+go
+INSERT INTO MundoAldea(idMundo, idAldea) values (9, 9)
+go
+INSERT INTO MundoAldea(idMundo, idAldea) values (10, 10)
+go
+
+--MundoBloque
+INSERT INTO MundoBloque(idMundo, idBloque) values(1, 1)
+go
+INSERT INTO MundoBloque(idMundo, idBloque) values (2, 2)
+go
+INSERT INTO MundoBloque(idMundo, idBloque) values (3, 3)
+go
+INSERT INTO MundoBloque(idMundo, idBloque) values (4, 4)
+go
+INSERT INTO MundoBloque(idMundo, idBloque) values (5, 5)
+go
+INSERT INTO MundoBloque(idMundo, idBloque) values (6, 6)
+go
+INSERT INTO MundoBloque(idMundo, idBloque) values(7, 7)
+go
+INSERT INTO MundoBloque(idMundo, idBloque) values (8, 8)
+go
+INSERT INTO MundoBloque(idMundo, idBloque) values (9, 9)
+go
+INSERT INTO MundoBloque(idMundo, idBloque) values (10, 10)
+go
+
+--MundoDimension
+INSERT INTO MundoDimension(idMundo, idDimension) values (1, 1)
+go
+INSERT INTO MundoDimension(idMundo, idDimension) values (2, 2)
+go
+INSERT INTO MundoDimension(idMundo, idDimension) values (3, 3)
+go
+INSERT INTO MundoDimension(idMundo, idDimension) values (4, 4)
+go
+INSERT INTO MundoDimension(idMundo, idDimension) values (5, 5)
+go
+INSERT INTO MundoDimension(idMundo, idDimension) values (6, 6)
+go
+INSERT INTO MundoDimension(idMundo, idDimension) values (7, 7)
+go
+INSERT INTO MundoDimension(idMundo, idDimension) values (8, 8)
+go
+INSERT INTO MundoDimension(idMundo, idDimension) values (9, 9)
+go
+INSERT INTO MundoDimension(idMundo, idDimension) values (10, 10)
+go
+
+--MundoEcosistema
+INSERT INTO MundoEcosistema(idMundo, idEcosistema) values (1, 1)
+go
+INSERT INTO MundoEcosistema(idMundo, idEcosistema) values (2, 2)
+go
+INSERT INTO MundoEcosistema(idMundo, idEcosistema) values (3, 3)
+go
+INSERT INTO MundoEcosistema(idMundo, idEcosistema) values (4, 4)
+go
+INSERT INTO MundoEcosistema(idMundo, idEcosistema) values (5, 5)
+go
+INSERT INTO MundoEcosistema(idMundo, idEcosistema) values (6, 6)
+go
+INSERT INTO MundoEcosistema(idMundo, idEcosistema) values (7, 7)
+go
+INSERT INTO MundoEcosistema(idMundo, idEcosistema) values (8, 8)
+go
+INSERT INTO MundoEcosistema(idMundo, idEcosistema) values (9, 9)
+go
+INSERT INTO MundoEcosistema(idMundo, idEcosistema) values (10, 10)
+go
+
+--MundoEstructura
+INSERT INTO MundoEstructura(idMundo, idEstructura) values (1, 1)
+go
+INSERT INTO MundoEstructura(idMundo, idEstructura) values (2, 2)
+go
+INSERT INTO MundoEstructura(idMundo, idEstructura) values (3, 3)
+go
+INSERT INTO MundoEstructura(idMundo, idEstructura) values (4, 4)
+go
+INSERT INTO MundoEstructura(idMundo, idEstructura) values (5, 5)
+go
+INSERT INTO MundoEstructura(idMundo, idEstructura) values (6, 6)
+go
+INSERT INTO MundoEstructura(idMundo, idEstructura) values (7, 7)
+go
+INSERT INTO MundoEstructura(idMundo, idEstructura) values (8, 8)
+go
+INSERT INTO MundoEstructura(idMundo, idEstructura) values (9, 9)
+go
+INSERT INTO MundoEstructura(idMundo, idEstructura) values (10, 10)
+go
+
+--MundoFluido
+INSERT INTO MundoFluido(idMundo, idFluido) values (1, 1)
+go
+INSERT INTO MundoFluido(idMundo, idFluido) values (2, 2)
+go
+INSERT INTO MundoFluido(idMundo, idFluido) values (3, 3)
+go
+INSERT INTO MundoFluido(idMundo, idFluido) values (4, 4)
+go
+INSERT INTO MundoFluido(idMundo, idFluido) values (5, 5)
+go
+INSERT INTO MundoFluido(idMundo, idFluido) values (6, 6)
+go
+INSERT INTO MundoFluido(idMundo, idFluido) values (7, 7)
+go
+INSERT INTO MundoFluido(idMundo, idFluido) values (8, 8)
+go
+INSERT INTO MundoFluido(idMundo, idFluido) values (9, 9)
+go
+INSERT INTO MundoFluido(idMundo, idFluido) values (10, 10)
+go
+
+--MundoFortaleza 
+INSERT INTO MundoFortaleza(idMundo, idFortaleza) values (1, 1)
+go
+INSERT INTO MundoFortaleza(idMundo, idFortaleza) values (2, 2)
+go
+INSERT INTO MundoFortaleza(idMundo, idFortaleza) values (3, 3)
+go
+INSERT INTO MundoFortaleza(idMundo, idFortaleza) values (4, 4)
+go
+INSERT INTO MundoFortaleza(idMundo, idFortaleza) values (5, 5)
+go
+INSERT INTO MundoFortaleza(idMundo, idFortaleza) values (6, 6)
+go
+INSERT INTO MundoFortaleza(idMundo, idFortaleza) values (7, 7)
+go
+INSERT INTO MundoFortaleza(idMundo, idFortaleza) values (8, 8)
+go
+INSERT INTO MundoFortaleza(idMundo, idFortaleza) values (9, 9)
+go
+INSERT INTO MundoFortaleza(idMundo, idFortaleza) values (10, 10)
+go
+
+--MundoGeneracion
+INSERT INTO MundoGeneracion(idMundo, idGeneracion) values (1, 1)
+go
+INSERT INTO MundoGeneracion(idMundo, idGeneracion) values (2, 2)
+go
+INSERT INTO MundoGeneracion(idMundo, idGeneracion) values (3, 3)
+go
+INSERT INTO MundoGeneracion(idMundo, idGeneracion) values (4, 4)
+go
+INSERT INTO MundoGeneracion(idMundo, idGeneracion) values (5, 5)
+go
+INSERT INTO MundoGeneracion(idMundo, idGeneracion) values (6, 6)
+go
+INSERT INTO MundoGeneracion(idMundo, idGeneracion) values (7, 7)
+go
+INSERT INTO MundoGeneracion(idMundo, idGeneracion) values (8, 8)
+go
+INSERT INTO MundoGeneracion(idMundo, idGeneracion) values (9, 9)
+go
+INSERT INTO MundoGeneracion(idMundo, idGeneracion) values (10, 10)
+go
+
+--MundoJefe
+INSERT INTO MundoJefe(idMundo, idJefe) values(1, 1)
+go
+INSERT INTO MundoJefe(idMundo, idJefe) values (2, 2)
+go
+INSERT INTO MundoJefe(idMundo, idJefe) values (3, 3)
+go
+INSERT INTO MundoJefe(idMundo, idJefe) values (4, 4)
+go
+INSERT INTO MundoJefe(idMundo, idJefe) values (5, 5)
+go
+INSERT INTO MundoJefe(idMundo, idJefe) values (6, 6)
+go
+INSERT INTO MundoJefe(idMundo, idJefe) values (7, 7)
+go
+INSERT INTO MundoJefe(idMundo, idJefe) values (8, 8)
+go
+INSERT INTO MundoJefe(idMundo, idJefe) values (9, 9)
+go
+INSERT INTO MundoJefe(idMundo, idJefe) values (10, 10)
+go
+
+--MundoJugador
+INSERT INTO MundoJugador(idMundo, idJugador) values (1, 1)
+go
+INSERT INTO MundoJugador(idMundo, idJugador) values (2, 2)
+go
+INSERT INTO MundoJugador(idMundo, idJugador) values (3, 3)
+go
+INSERT INTO MundoJugador(idMundo, idJugador) values (4, 4)
+go
+INSERT INTO MundoJugador(idMundo, idJugador) values (5, 5)
+go
+INSERT INTO MundoJugador(idMundo, idJugador) values (6, 6)
+go
+INSERT INTO MundoJugador(idMundo, idJugador) values (7, 7)
+go
+INSERT INTO MundoJugador(idMundo, idJugador) values (8, 8)
+go
+INSERT INTO MundoJugador(idMundo, idJugador) values (9, 9)
+go
+INSERT INTO MundoJugador(idMundo, idJugador) values (10, 10)
+go
+--MundoMob
+INSERT INTO MundoMob(idMundo, idMob) values (1, 1)
+go
+INSERT INTO MundoMob(idMundo, idMob) values (2, 2)
+go
+INSERT INTO MundoMob(idMundo, idMob) values (3, 3)
+go
+INSERT INTO MundoMob(idMundo, idMob) values (4, 4)
+go
+INSERT INTO MundoMob(idMundo, idMob) values (5, 5)
+go
+INSERT INTO MundoMob(idMundo, idMob) values (6, 6)
+go
+INSERT INTO MundoMob(idMundo, idMob) values (7, 7)
+go
+INSERT INTO MundoMob(idMundo, idMob) values (8, 8)
+go
+INSERT INTO MundoMob(idMundo, idMob) values (9, 9)
+go
+INSERT INTO MundoMob(idMundo, idMob) values (10, 10)
+go
+
+--MundoModd
+INSERT INTO MundoModd(idMundo, idModd) values (1, 1)
+go
+INSERT INTO MundoModd(idMundo, idModd) values (2, 2)
+go
+INSERT INTO MundoModd(idMundo, idModd) values (3, 3)
+go
+INSERT INTO MundoModd(idMundo, idModd) values (4, 4)
+go
+INSERT INTO MundoModd(idMundo, idModd) values (5, 5)
+go
+INSERT INTO MundoModd(idMundo, idModd) values (6, 6)
+go
+INSERT INTO MundoModd(idMundo, idModd) values (7, 7)
+go
+INSERT INTO MundoModd(idMundo, idModd) values (8, 8)
+go
+INSERT INTO MundoModd(idMundo, idModd) values (9, 9)
+go
+INSERT INTO MundoModd(idMundo, idModd) values (10, 10)
+go
+
+--MundoPackRecurso
+INSERT INTO MundoPackRecurso(idMundo, idPackRecurso) values (1, 1)
+go
+INSERT INTO MundoPackRecurso(idMundo, idPackRecurso) values (2, 2)
+go
+INSERT INTO MundoPackRecurso(idMundo, idPackRecurso) values (3, 3)
+go
+INSERT INTO MundoPackRecurso(idMundo, idPackRecurso) values (4, 4)
+go
+INSERT INTO MundoPackRecurso(idMundo, idPackRecurso) values (5, 5)
+go
+INSERT INTO MundoPackRecurso(idMundo, idPackRecurso) values (6, 6)
+go
+INSERT INTO MundoPackRecurso(idMundo, idPackRecurso) values (7, 7)
+go
+INSERT INTO MundoPackRecurso(idMundo, idPackRecurso) values (8, 8)
+go
+INSERT INTO MundoPackRecurso(idMundo, idPackRecurso) values (9, 9)
+go
+INSERT INTO MundoPackRecurso(idMundo, idPackRecurso) values (10, 10)
+go
+
+--MundoPackTextura
+INSERT INTO MundoPackTextura(idMundo, idPackTextura) values (1, 1)
+go
+INSERT INTO MundoPackTextura(idMundo, idPackTextura) values (2, 2)
+go
+INSERT INTO MundoPackTextura(idMundo, idPackTextura) values (3, 3)
+go
+INSERT INTO MundoPackTextura(idMundo, idPackTextura) values (4, 4)
+go
+INSERT INTO MundoPackTextura(idMundo, idPackTextura) values (5, 5)
+go
+INSERT INTO MundoPackTextura(idMundo, idPackTextura) values (6, 6)
+go
+INSERT INTO MundoPackTextura(idMundo, idPackTextura) values (7, 7)
+go
+INSERT INTO MundoPackTextura(idMundo, idPackTextura) values (8, 8)
+go
+INSERT INTO MundoPackTextura(idMundo, idPackTextura) values (9, 9)
+go
+INSERT INTO MundoPackTextura(idMundo, idPackTextura) values (10, 10)
+go
+
+--MundoTemplo
+INSERT INTO MundoTemplo(idMundo, idTemplo) values (1, 1)
+go
+INSERT INTO MundoTemplo(idMundo, idTemplo) values (2, 2)
+go
+INSERT INTO MundoTemplo(idMundo, idTemplo) values (3, 3)
+go
+INSERT INTO MundoTemplo(idMundo, idTemplo) values (4, 4)
+go
+INSERT INTO MundoTemplo(idMundo, idTemplo) values (5, 5)
+go
+INSERT INTO MundoTemplo(idMundo, idTemplo) values (6, 6)
+go
+INSERT INTO MundoTemplo(idMundo, idTemplo) values (7, 7)
+go
+INSERT INTO MundoTemplo(idMundo, idTemplo) values (8, 8)
+go
+INSERT INTO MundoTemplo(idMundo, idTemplo) values (9, 9)
+go
+INSERT INTO MundoTemplo(idMundo, idTemplo) values (10, 10)
+go
+
+--ServidorModoServidor
+
+INSERT INTO ServidorModoServidor(idServidor, idModoServidor) values (1, 1)
+go
+INSERT INTO ServidorModoServidor(idServidor, idModoServidor) values (2, 2)
+go
+INSERT INTO ServidorModoServidor(idServidor, idModoServidor) values (3, 3)
+go
+INSERT INTO ServidorModoServidor(idServidor, idModoServidor) values (4, 4)
+go
+INSERT INTO ServidorModoServidor(idServidor, idModoServidor) values (5, 5)
+go
+INSERT INTO ServidorModoServidor(idServidor, idModoServidor) values (6, 6)
+go
+INSERT INTO ServidorModoServidor(idServidor, idModoServidor) values (7, 7)
+go
+INSERT INTO ServidorModoServidor(idServidor, idModoServidor) values (8, 8)
+go
+INSERT INTO ServidorModoServidor(idServidor, idModoServidor) values (9, 9)
+go
+INSERT INTO ServidorModoServidor(idServidor, idModoServidor) values (10, 10)
+go
+
+--SELECT *FROM MundoAldea
+--UPDATE MundoAldea SET idAldea = '1' WHERE idMundoAldea = 1
+--GO
+--SELECT *FROM MundoAldea
+--DELETE FROM MundoAldea WHERE idMundoAldea = 1
+--GO
+--SELECT *FROM MundoAldea
+
+--SELECT *FROM Aldea
+--UPDATE Aldea SET estilo = 'Desierto' WHERE idAldea = 1
+--GO
+--SELECT *FROM Aldea
+--DELETE FROM Aldea WHERE idAldea = 1
+--GO
+--SELECT *FROM Aldea
